@@ -6,7 +6,7 @@ export const Route = createRootRoute({
   component: RootComponent,
   beforeLoad: ({ location }) => {
     if (location.pathname === "/") {
-      throw redirect({ to: "/login" });
+      throw redirect({ to: "/join-newsletters" });
     }
   },
 });
