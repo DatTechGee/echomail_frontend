@@ -9,14 +9,14 @@ import {
   Zap,
   TrendingUp,
   Phone,
-  MessageCircle,
 } from "lucide-react";
 import { brand } from "@/constants/brand";
 import { SUBSCRIPTION_SOURCE_OPTIONS } from "@/constants/newsletter";
 import { useSubscribeNewsletter } from "@/hooks/useNewsletter";
 import { toast } from "react-hot-toast";
 import type { SubscribeRequest, NewsletterSource } from "@/types/newsletter";
-import { FaWhatsapp } from "react-icons/fa";
+import { FaWhatsapp, FaFacebook, FaInstagram } from "react-icons/fa";
+
 interface FormData {
   email: string;
   name?: string;
@@ -81,6 +81,17 @@ export const JoinNewsletter = () => {
     );
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
     window.open(whatsappUrl, "_blank");
+  };
+
+  const handleFacebookClick = () => {
+    window.open("https://www.facebook.com/share/16g9YULeFL/", "_blank");
+  };
+
+  const handleInstagramClick = () => {
+    window.open(
+      "https://www.instagram.com/levelupxperiences?igsh=dmNvNml3YjV6d3h2",
+      "_blank"
+    );
   };
 
   const features = [
@@ -166,41 +177,59 @@ export const JoinNewsletter = () => {
           </div>
         </motion.div>
 
-        {/* Floating WhatsApp Button */}
-        <motion.button
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={handleWhatsAppClick}
-          className="fixed bottom-6 right-6 z-50 w-16 h-16 bg-[#25D366] hover:bg-[#128C7E] text-white rounded-full shadow-2xl flex items-center justify-center transition-colors duration-300 group"
-          aria-label="Chat on WhatsApp"
-        >
-          <MessageCircle className="w-7 h-7" />
-
-          {/* Ripple effect */}
-          <motion.div
-            className="absolute inset-0 rounded-full bg-[#25D366]"
-            initial={{ scale: 1, opacity: 0.5 }}
-            animate={{ scale: 1.5, opacity: 0 }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              ease: "easeOut",
-            }}
-          />
-
-          {/* Tooltip */}
-          <motion.div
-            initial={{ opacity: 0, x: 10 }}
-            whileHover={{ opacity: 1, x: 0 }}
-            className="absolute right-full mr-3 px-3 py-2 bg-slate-800 text-white text-sm rounded-lg whitespace-nowrap shadow-lg hidden group-hover:block"
+        {/* Floating Social Media Buttons */}
+        <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
+          <motion.button
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={handleWhatsAppClick}
+            className="w-14 h-14 bg-[#25D366] hover:bg-[#128C7E] text-white rounded-full shadow-lg flex items-center justify-center transition-colors duration-300 group relative"
+            aria-label="Chat on WhatsApp"
           >
-            Chat with us on WhatsApp
-            <div className="absolute top-1/2 -right-1 -translate-y-1/2 w-2 h-2 bg-slate-800 rotate-45" />
-          </motion.div>
-        </motion.button>
+            <FaWhatsapp className="w-7 h-7" />
+            <div className="absolute right-full mr-3 px-3 py-2 bg-slate-800 text-white text-sm rounded-lg whitespace-nowrap shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+              WhatsApp
+              <div className="absolute top-1/2 -right-1 -translate-y-1/2 w-2 h-2 bg-slate-800 rotate-45" />
+            </div>
+          </motion.button>
+
+          <motion.button
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.6, type: "spring", stiffness: 200 }}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={handleFacebookClick}
+            className="w-14 h-14 bg-[#1877F2] hover:bg-[#0c63d4] text-white rounded-full shadow-lg flex items-center justify-center transition-colors duration-300 group relative"
+            aria-label="Follow us on Facebook"
+          >
+            <FaFacebook className="w-7 h-7" />
+            <div className="absolute right-full mr-3 px-3 py-2 bg-slate-800 text-white text-sm rounded-lg whitespace-nowrap shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+              Facebook
+              <div className="absolute top-1/2 -right-1 -translate-y-1/2 w-2 h-2 bg-slate-800 rotate-45" />
+            </div>
+          </motion.button>
+
+          <motion.button
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.7, type: "spring", stiffness: 200 }}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={handleInstagramClick}
+            className="w-14 h-14 bg-gradient-to-br from-[#833AB4] via-[#E1306C] to-[#F77737] hover:opacity-90 text-white rounded-full shadow-lg flex items-center justify-center transition-opacity duration-300 group relative"
+            aria-label="Follow us on Instagram"
+          >
+            <FaInstagram className="w-7 h-7" />
+            <div className="absolute right-full mr-3 px-3 py-2 bg-slate-800 text-white text-sm rounded-lg whitespace-nowrap shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+              Instagram
+              <div className="absolute top-1/2 -right-1 -translate-y-1/2 w-2 h-2 bg-slate-800 rotate-45" />
+            </div>
+          </motion.button>
+        </div>
       </div>
     );
   }
@@ -629,37 +658,59 @@ export const JoinNewsletter = () => {
         </div>
       </div>
 
-      {/* Floating WhatsApp Button */}
-      <motion.button
-        initial={{ scale: 0, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ delay: 1.2, type: "spring", stiffness: 200 }}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-        onClick={handleWhatsAppClick}
-        className="fixed bottom-6 right-6 z-50 w-16 h-16 bg-[#25D366] hover:bg-[#128C7E] text-white rounded-full shadow-2xl flex items-center justify-center transition-colors duration-300 group"
-        aria-label="Chat on WhatsApp"
-      >
-        <FaWhatsapp className="w-10 h-10" />
+      {/* Floating Social Media Buttons */}
+      <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
+        <motion.button
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ delay: 1.2, type: "spring", stiffness: 200 }}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={handleWhatsAppClick}
+          className="w-14 h-14 bg-[#25D366] hover:bg-[#128C7E] text-white rounded-full shadow-lg flex items-center justify-center transition-colors duration-300 group relative"
+          aria-label="Chat on WhatsApp"
+        >
+          <FaWhatsapp className="w-7 h-7" />
+          <div className="absolute right-full mr-3 px-3 py-2 bg-slate-800 text-white text-sm rounded-lg whitespace-nowrap shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+            WhatsApp
+            <div className="absolute top-1/2 -right-1 -translate-y-1/2 w-2 h-2 bg-slate-800 rotate-45" />
+          </div>
+        </motion.button>
 
-        {/* Ripple effect */}
-        <motion.div
-          className="absolute inset-0 rounded-full bg-[#25D366]"
-          initial={{ scale: 1, opacity: 0.5 }}
-          animate={{ scale: 1.5, opacity: 0 }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: "easeOut",
-          }}
-        />
+        <motion.button
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ delay: 1.3, type: "spring", stiffness: 200 }}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={handleFacebookClick}
+          className="w-14 h-14 bg-[#1877F2] hover:bg-[#0c63d4] text-white rounded-full shadow-lg flex items-center justify-center transition-colors duration-300 group relative"
+          aria-label="Follow us on Facebook"
+        >
+          <FaFacebook className="w-7 h-7" />
+          <div className="absolute right-full mr-3 px-3 py-2 bg-slate-800 text-white text-sm rounded-lg whitespace-nowrap shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+            Facebook
+            <div className="absolute top-1/2 -right-1 -translate-y-1/2 w-2 h-2 bg-slate-800 rotate-45" />
+          </div>
+        </motion.button>
 
-        {/* Tooltip */}
-        <div className="absolute right-full mr-3 px-3 py-2 bg-slate-800 text-white text-sm rounded-lg whitespace-nowrap shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-          Chat with us on WhatsApp
-          <div className="absolute top-1/2 -right-1 -translate-y-1/2 w-2 h-2 bg-slate-800 rotate-45" />
-        </div>
-      </motion.button>
+        <motion.button
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ delay: 1.4, type: "spring", stiffness: 200 }}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={handleInstagramClick}
+          className="w-14 h-14 bg-gradient-to-br from-[#833AB4] via-[#E1306C] to-[#F77737] hover:opacity-90 text-white rounded-full shadow-lg flex items-center justify-center transition-opacity duration-300 group relative"
+          aria-label="Follow us on Instagram"
+        >
+          <FaInstagram className="w-7 h-7" />
+          <div className="absolute right-full mr-3 px-3 py-2 bg-slate-800 text-white text-sm rounded-lg whitespace-nowrap shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+            Instagram
+            <div className="absolute top-1/2 -right-1 -translate-y-1/2 w-2 h-2 bg-slate-800 rotate-45" />
+          </div>
+        </motion.button>
+      </div>
     </div>
   );
 };
