@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
-import { Users, Zap, TrendingUp } from "lucide-react";
+import { Users, Zap, TrendingUp, Mail } from "lucide-react";
 import { brand } from "@/constants/brand";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
