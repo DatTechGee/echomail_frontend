@@ -29,6 +29,7 @@ import { SOURCE_OPTIONS, STATUS_OPTIONS } from "@/constants/newsletter";
 import {
   getSourceLabel,
   getStatusColor,
+  getStatusLabel,
   getSubscriberInitials,
   formatSubscriberName,
   formatDate,

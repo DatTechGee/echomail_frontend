@@ -3,7 +3,7 @@ import { useCreateBlockNote } from "@blocknote/react";
 import { BlockNoteView } from "@blocknote/mantine";
 import "@blocknote/mantine/style.css";
 import "@blocknote/core/fonts/inter.css";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useUploadImage } from "@/hooks/useImage";
 import { toast } from "react-hot-toast";
 
@@ -15,6 +15,7 @@ interface EditorProps {
 
 const Editor = ({ onChange, onEditorReady, initialContent }: EditorProps) => {
   const { mutateAsync: uploadImage } = useUploadImage();
+  const lastEmittedRef = useRef<string | null>(null);
 
   const handleFileUpload = async (file: File): Promise<string> => {
     try {
@@ -37,8 +38,12 @@ const Editor = ({ onChange, onEditorReady, initialContent }: EditorProps) => {
     onEditorReady(editor);
   }, [editor, onEditorReady]);
 
+  // Load initial content (template / duplicate). Skip anything that the
+  // editor itself emitted, otherwise every keystroke would reload the
+  // document and split each character onto its own line.
   useEffect(() => {
     if (!initialContent) return;
+    if (initialContent === lastEmittedRef.current) return;
     try {
       const blocks = JSON.parse(initialContent);
       if (Array.isArray(blocks) && blocks.length > 0) {
@@ -55,6 +60,7 @@ const Editor = ({ onChange, onEditorReady, initialContent }: EditorProps) => {
       theme="light"
       onChange={() => {
         const newContent = JSON.stringify(editor.document);
+        lastEmittedRef.current = newContent;
         onChange(newContent);
       }}
     />
