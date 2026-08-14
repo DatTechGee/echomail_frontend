@@ -1,4 +1,5 @@
-import { Mail, Send } from "lucide-react";
+import { Mail } from "lucide-react";
+import { brand } from "@/constants/brand";
 
 interface LogoProps {
   size?: "sm" | "md" | "lg";
@@ -13,7 +14,8 @@ export const Logo = ({ size = "md", showText = true, className }: LogoProps) => 
 
   return (
     <div
-      className={`flex items-center justify-center rounded-xl bg-gradient-to-br from-${brand.colors.primary} to-${brand.colors.secondary} ${className}`} style={{ width, height }}
+      className={`flex items-center justify-center rounded-xl ${className}`}
+      style={{ width, height, background: `linear-gradient(135deg, ${brand.colors.primary}, ${brand.colors.secondary})` }}
     >
       <Mail
         className="w-5 h-5 text-white"
@@ -21,7 +23,7 @@ export const Logo = ({ size = "md", showText = true, className }: LogoProps) => 
       />
       {showText && (
         <span
-          className={`ml-2 text-xl font-extrabold tracking-tight capitalize`}
+          className="ml-2 text-xl font-extrabold tracking-tight capitalize"
           style={{ backgroundImage: `linear-gradient(135deg, ${brand.colors.primary}, ${brand.colors.accent})`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}
         >
           EchoMail
