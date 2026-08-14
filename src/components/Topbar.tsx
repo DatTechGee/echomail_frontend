@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Search, Menu, ChevronDown, Settings, LogOut } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { brand } from "@/constants/brand";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { useLogout } from "@/hooks/useAuth";
 import { getInitials, getFullName } from "@/utils/auth";
 import { toast } from "react-hot-toast";
@@ -120,6 +121,8 @@ export const Topbar = ({ onMenuToggle, isSidebarCollapsed }: TopbarProps) => {
           >
             <Search className="w-5 h-5" />
           </motion.button>
+
+          <ThemeToggle />
 
           <div className="relative">
             <motion.button

@@ -76,6 +76,23 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
+    <!-- Apply saved theme before paint to avoid flash -->
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem("levelup-theme") || "system";
+          var dark =
+            t === "dark" ||
+            (t === "system" &&
+              window.matchMedia("(prefers-color-scheme: dark)").matches);
+          if (dark) {
+            document.documentElement.classList.add("dark");
+            document.documentElement.style.colorScheme = "dark";
+          }
+        } catch (e) {}
+      })();
+    </script>
+
     <!-- Structured Data -->
     <script type="application/ld+json">
       {

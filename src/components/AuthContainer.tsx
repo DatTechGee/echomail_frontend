@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { Users, Zap, TrendingUp } from "lucide-react";
 import { brand } from "@/constants/brand";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const typewriterTexts = [
   "Connect with talented freelancers",
@@ -173,6 +174,10 @@ export const AuthContainer = ({
       </div>
 
       <div className="flex-1 flex items-center justify-center p-8 lg:p-12 relative overflow-hidden">
+        <div className="absolute top-4 right-4 z-20">
+          <ThemeToggle />
+        </div>
+
         <div className="absolute inset-0">
           <motion.div
             className="absolute top-20 right-20 w-40 h-40 rounded-full filter blur-3xl opacity-10"

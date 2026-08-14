@@ -12,8 +12,11 @@ import {
   MapPin,
   Sparkles,
   Send,
+  Lock,
 } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { brand } from "@/constants/brand";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { SUBSCRIPTION_SOURCE_OPTIONS } from "@/constants/newsletter";
 import { useSubscribeNewsletter } from "@/hooks/useNewsletter";
 import { toast } from "react-hot-toast";
@@ -283,19 +286,30 @@ export const JoinNewsletter = () => {
             alt={brand.projectName}
             className="w-44 object-contain"
           />
-          <motion.button
-            onClick={scrollToForm}
-            whileHover={{ y: -1 }}
-            whileTap={{ scale: 0.98 }}
-            className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-xl text-sm font-bold text-white transition-all duration-300 shadow-lg"
-            style={{
-              background: `linear-gradient(135deg, ${brand.colors.primary}, ${brand.colors.secondary})`,
-              boxShadow: `0 8px 24px ${brand.colors.primary}30`,
-            }}
-          >
-            <span>Join the Waitlist</span>
-            <ArrowRight className="w-4 h-4" />
-          </motion.button>
+          <div className="flex items-center space-x-3">
+            <ThemeToggle />
+            <Link
+              to="/login"
+              className="inline-flex items-center space-x-2 px-4 py-2.5 rounded-xl text-sm font-bold text-slate-700 dark:text-slate-200 border border-slate-300/70 dark:border-slate-700/70 hover:border-slate-400 dark:hover:border-slate-500 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 transition-all duration-200"
+            >
+              <Lock className="w-4 h-4" />
+              <span className="hidden sm:inline">Admin Login</span>
+            </Link>
+            <motion.button
+              onClick={scrollToForm}
+              whileHover={{ y: -1 }}
+              whileTap={{ scale: 0.98 }}
+              className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-xl text-sm font-bold text-white transition-all duration-300 shadow-lg"
+              style={{
+                background: `linear-gradient(135deg, ${brand.colors.primary}, ${brand.colors.secondary})`,
+                boxShadow: `0 8px 24px ${brand.colors.primary}30`,
+              }}
+            >
+              <span className="hidden sm:inline">Join the Waitlist</span>
+              <span className="sm:hidden">Join</span>
+              <ArrowRight className="w-4 h-4" />
+            </motion.button>
+          </div>
         </nav>
       </motion.header>
 
@@ -705,6 +719,137 @@ export const JoinNewsletter = () => {
           </div>
         </div>
 
+        {/* What We Do */}
+        <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-16 lg:py-24">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.7 }}
+            className="text-center max-w-3xl mx-auto mb-12 lg:mb-16"
+          >
+            <span
+              className="inline-block px-4 py-1.5 rounded-full text-sm font-medium mb-4"
+              style={{
+                backgroundColor: `${brand.colors.primary}10`,
+                color: brand.colors.primary,
+                border: `1px solid ${brand.colors.primary}25`,
+              }}
+            >
+              What We Do
+            </span>
+            <h2 className="text-3xl lg:text-5xl font-extrabold text-slate-800 dark:text-slate-100 leading-tight tracking-tight mb-5">
+              Everything you need to{" "}
+              <span
+                className="bg-clip-text text-transparent"
+                style={{
+                  backgroundImage: `linear-gradient(120deg, ${brand.colors.primary}, ${brand.colors.accent})`,
+                }}
+              >
+                grow together
+              </span>
+            </h2>
+            <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
+              {brand.aboutUs}
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
+            {features.map((feature, index) => (
+              <motion.div
+                key={feature.title}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ delay: index * 0.12, duration: 0.6 }}
+                whileHover={{ y: -6 }}
+                className="group relative bg-white/80 dark:bg-slate-900/70 backdrop-blur-xl rounded-3xl border border-slate-200/60 dark:border-slate-800/60 shadow-xl p-8 transition-all duration-300"
+              >
+                <div
+                  className="absolute inset-x-0 top-0 h-1 rounded-t-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  style={{
+                    background: `linear-gradient(90deg, ${brand.colors.primary}, ${brand.colors.accent})`,
+                  }}
+                />
+                <div
+                  className="p-3.5 rounded-2xl w-fit mb-6 transition-transform duration-300 group-hover:scale-110"
+                  style={{ backgroundColor: `${brand.colors.primary}15` }}
+                >
+                  <feature.icon
+                    className="w-7 h-7"
+                    style={{ color: brand.colors.primary }}
+                  />
+                </div>
+                <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-3">
+                  {feature.title}
+                </h3>
+                <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+                  {feature.description}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
+        {/* CTA - Admin Login / Newsletter */}
+        <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pb-16 lg:pb-24">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.7 }}
+            className="relative overflow-hidden rounded-[2rem] p-10 lg:p-16 text-center shadow-2xl"
+            style={{
+              background: `linear-gradient(135deg, ${brand.colors.primary}, ${brand.colors.secondary})`,
+            }}
+          >
+            <div
+              className="absolute top-0 left-0 right-0 h-px"
+              style={{
+                background: `linear-gradient(90deg, transparent, #fff, transparent)`,
+              }}
+            />
+            <motion.div
+              className="absolute -top-24 -right-24 w-72 h-72 rounded-full bg-white/10 blur-3xl"
+              animate={{ scale: [1, 1.2, 1] }}
+              transition={{ duration: 12, repeat: Infinity }}
+            />
+            <motion.div
+              className="absolute -bottom-24 -left-24 w-72 h-72 rounded-full bg-white/10 blur-3xl"
+              animate={{ scale: [1.1, 1, 1.1] }}
+              transition={{ duration: 14, repeat: Infinity }}
+            />
+
+            <div className="relative z-10 max-w-2xl mx-auto">
+              <h2 className="text-3xl lg:text-5xl font-extrabold text-white leading-tight mb-4">
+                Ready to level up your journey?
+              </h2>
+              <p className="text-lg text-white/85 leading-relaxed mb-10">
+                Join the newsletter to get early access to Levelup Xperience,
+                or sign in as an admin to start building your community.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link
+                  to="/login"
+                  className="inline-flex items-center justify-center space-x-2 px-8 py-4 rounded-xl font-bold text-slate-800 bg-white hover:bg-slate-100 transition-all duration-300 shadow-lg"
+                >
+                  <Lock className="w-5 h-5" />
+                  <span>Admin Login</span>
+                </Link>
+                <motion.button
+                  onClick={scrollToForm}
+                  whileHover={{ y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="inline-flex items-center justify-center space-x-2 px-8 py-4 rounded-xl font-bold text-white border-2 border-white/60 hover:bg-white/10 transition-all duration-300"
+                >
+                  <Send className="w-5 h-5" />
+                  <span>Join the Newsletter</span>
+                </motion.button>
+              </div>
+            </div>
+          </motion.div>
+        </section>
+
         {/* Footer */}
         <footer className="relative z-10 border-t border-slate-200/60 dark:border-slate-800/60 bg-white/50 dark:bg-slate-900/50 backdrop-blur-xl">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
@@ -764,6 +909,13 @@ export const JoinNewsletter = () => {
                   <span>Join the Waitlist</span>
                   <ArrowRight className="w-4 h-4" />
                 </motion.button>
+                <Link
+                  to="/login"
+                  className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-xl text-sm font-bold text-slate-700 dark:text-slate-200 border border-slate-300/70 dark:border-slate-700/70 hover:border-slate-400 dark:hover:border-slate-500 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 transition-all duration-200"
+                >
+                  <Lock className="w-4 h-4" />
+                  <span>Admin Login</span>
+                </Link>
               </div>
             </div>
 
