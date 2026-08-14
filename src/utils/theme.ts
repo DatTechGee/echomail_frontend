@@ -1,6 +1,6 @@
 export type Theme = "light" | "dark" | "system";
 
-const THEME_KEY = "levelup-theme";
+const THEME_KEY = "echomail-theme";
 
 const getSystemDark = () =>
   window.matchMedia("(prefers-color-scheme: dark)").matches;

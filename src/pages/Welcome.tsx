@@ -14,25 +14,26 @@ import {
 import { Link } from "@tanstack/react-router";
 import { brand } from "@/constants/brand";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { Logo } from "@/components/Logo";
 
 const features = [
   {
-    icon: Users,
-    title: "Vibrant Community",
+    icon: Mail,
+    title: "Beautiful Templates",
     description:
-      "Connect with talented freelancers, content creators, and learners from around the world",
+      "Pre-designed email templates that look great on any device and drive higher engagement",
   },
   {
     icon: Zap,
-    title: "Skill Development",
+    title: "Automated Workflows",
     description:
-      "Access exclusive workshops, resources, and learning opportunities to level up your skills",
+      "Set up drip campaigns, onboarding sequences, and nurture paths that run on autopilot",
   },
   {
     icon: TrendingUp,
-    title: "Collaboration & Growth",
+    title: "Real-time Analytics",
     description:
-      "Find projects, collaborate with peers, and grow your career in a supportive environment",
+      "Track opens, clicks, and subscriber growth with detailed reports to optimize your strategy",
   },
 ];
 
@@ -178,23 +179,12 @@ export const Welcome = () => {
                 transition={{ delay: 0.25 }}
                 className="space-y-5"
               >
-                <h1 className="text-4xl lg:text-6xl font-extrabold text-slate-800 dark:text-slate-100 leading-[1.1] tracking-tight">
-                  Join the community where
-                  <br />
-                  <span
-                    className="bg-clip-text text-transparent"
-                    style={{
-                      backgroundImage: `linear-gradient(120deg, ${brand.colors.primary}, ${brand.colors.accent})`,
-                    }}
-                  >
-                    talents thrive together
-                  </span>
-                </h1>
-                <p className="text-lg lg:text-xl text-slate-600 dark:text-slate-400 leading-relaxed max-w-xl">
-                  Whether you're a freelancer, content creator, or eager to
-                  learn, Levelup Xperience is your platform to connect,
-                  collaborate, and grow.
-                </p>
+<h1 className="text-4xl lg:text-6xl font-extrabold text-slate-800 dark:text-slate-100 leading-[1.1] tracking-tight">
+  Send emails that get opened
+</h1>
+<p className="text-lg lg:text-xl text-slate-600 dark:text-slate-400 leading-relaxed max-w-xl">
+  Create, automate, and track beautiful newsletters that reach every inbox. Whether you're a business owner, creator, or marketer, EchoMail helps you engage your audience and grow your list.
+</p>
               </motion.div>
 
               {/* Features */}
@@ -248,10 +238,10 @@ export const Welcome = () => {
                 </div>
                 <div>
                   <p className="font-bold text-slate-800 dark:text-slate-200 text-sm">
-                    Join 500+ professionals
+                    Join 500+ subscribers
                   </p>
                   <p className="text-slate-500 dark:text-slate-400 text-sm">
-                    already on the newsletter
+                    on our newsletter list
                   </p>
                 </div>
               </motion.div>
@@ -452,30 +442,31 @@ export const Welcome = () => {
               transition={{ duration: 14, repeat: Infinity }}
             />
 
-            <div className="relative z-10 max-w-2xl mx-auto">
-              <h2 className="text-3xl lg:text-5xl font-extrabold text-white leading-tight mb-4">
-                Ready to level up your journey?
-              </h2>
-              <p className="text-lg text-white/85 leading-relaxed mb-10">
-                Join the newsletter to get early access to Levelup Xperience,
-                or sign in as an admin to start building your community.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link
-                  to="/login"
-                  className="inline-flex items-center justify-center space-x-2 px-8 py-4 rounded-xl font-bold text-slate-800 bg-white hover:bg-slate-100 transition-all duration-300 shadow-lg"
-                >
-                  <Lock className="w-5 h-5" />
-                  <span>Admin Login</span>
-                </Link>
-                <Link
-                  to="/join-newsletters"
-                  className="inline-flex items-center justify-center space-x-2 px-8 py-4 rounded-xl font-bold text-white border-2 border-white/60 hover:bg-white/10 transition-all duration-300"
-                >
-                  <Send className="w-5 h-5" />
-                  <span>Join the Newsletter</span>
-                </Link>
-              </div>
+<div className="relative z-10 max-w-2xl mx-auto">
+  <h2 className="text-3xl lg:text-5xl font-extrabold text-white leading-tight mb-4">
+    Ready to launch your next campaign?
+  </h2>
+  <p className="text-lg text-white/85 leading-relaxed mb-10">
+    Create and send beautiful email campaigns that engage your audience and grow your list.
+  </p>
+  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+    <Link
+      to="/login"
+      className="inline-flex items-center justify-center space-x-2 px-8 py-4 rounded-xl font-bold text-slate-800 bg-white hover:bg-slate-100 transition-all duration-300 shadow-lg"
+    >
+      <Lock className="w-5 h-5" />
+      <span>EchoMail Admin</span>
+    </Link>
+    <Link
+      to="/join-newsletters"
+      className="inline-flex items-center justify-center space-x-2 px-8 py-4 rounded-xl font-bold text-white border-2 border-white/60 hover:bg-white/10 transition-all duration-300"
+    >
+      <Send className="w-5 h-5" />
+      <span>Get Started</span>
+      <ArrowRight className="w-5 h-5" />
+    </Link>
+  </div>
+</div>
             </div>
           </motion.div>
         </section>

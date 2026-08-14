@@ -1,6 +1,6 @@
 export const brand = {
-  projectName: "Levelup Xperience",
-  logo: "/assets/logo.png",
+  projectName: "EchoMail",
+  logo: "/assets/logo.svg",
   colors: {
     primary: "#2563EB",
     secondary: "#1E40AF",
@@ -14,15 +14,15 @@ export const brand = {
     primary: "NeurialGrotesk, sans-serif",
   },
   aboutUs:
-    "Levelup Xperience is a vibrant community platform connecting freelancers, content creators, and learners. We bring together talented individuals looking to grow, collaborate, and elevate their skills in a supportive environment. Join our community and level up your journey.",
+    "Send, share, and grow with email campaigns designed to engage your audience. EchoMail helps you create, automate, and track beautiful newsletters that reach every inbox.",
   contact: {
-    email: "hello@levelupxperience.com",
-    phone: "+234 800 123 4567",
-    address: "Abuja, Nigeria",
+    email: "hello@echomail.com",
+    phone: "+234 900 000 0000",
+    address: "Lagos, Nigeria",
   },
   socials: {
-    twitter: "https://twitter.com/levelupxperience",
-    linkedin: "https://linkedin.com/company/levelupxperience",
-    facebook: "https://facebook.com/levelupxperience",
+    twitter: "https://twitter.com/echomail",
+    linkedin: "https://linkedin.com/company/echomail",
+    facebook: "https://facebook.com/echomail",
   },
 };

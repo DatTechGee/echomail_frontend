@@ -133,10 +133,10 @@ export const JoinNewsletter = () => {
                   <h1 className="text-3xl font-extrabold text-slate-800 dark:text-slate-100">
                     You're on the waitlist!
                   </h1>
-                  <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
-                    Welcome to Levelup Xperience! Check your email for
-                    confirmation and be the first to know when we launch.
-                  </p>
+<p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+                      Welcome to EchoMail! Check your email for
+                      confirmation and be the first to access our email campaigns.
+                    </p>
                 </motion.div>
 
                 <motion.div
@@ -150,9 +150,9 @@ export const JoinNewsletter = () => {
                     alt={brand.projectName}
                     className="w-44 mx-auto object-contain mb-3"
                   />
-                  <p className="text-sm text-slate-500 dark:text-slate-400">
-                    Level up your journey with us
-                  </p>
+<p className="text-sm text-slate-500 dark:text-slate-400">
+                      Experience EchoMail's features firsthand
+                    </p>
                 </motion.div>
 
                 <motion.div
@@ -504,11 +504,10 @@ export const JoinNewsletter = () => {
 
                 {/* Privacy Notice */}
                 <div className="text-center mt-6">
-                  <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                    By joining, you'll be among the first to access Levelup
-                    Xperience when we launch. We respect your privacy and will
-                    never share your information.
-                  </p>
+<p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                      By joining, you'll be among the first to access EchoMail when we launch. We respect your privacy and will
+                      never share your information.
+                    </p>
                 </div>
               </div>
             </div>

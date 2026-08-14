@@ -5,10 +5,10 @@ import { brand } from "@/constants/brand";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 const typewriterTexts = [
-  "Connect with talented freelancers",
-  "Join a thriving creative community",
-  "Learn and grow together",
-  "Elevate your skills with experts",
+  "Collect emails effortlessly",
+  "Launch beautiful campaigns",
+  "Nurture subscribers automatically",
+  "Track performance insights",
 ];
 
 interface AuthContainerProps {
@@ -20,7 +20,7 @@ interface AuthContainerProps {
 export const AuthContainer = ({
   children,
   title = "Welcome to",
-  subtitle = "Levelup Xperience",
+  subtitle = "EchoMail",
 }: AuthContainerProps) => {
   const [currentText, setCurrentText] = useState(0);
   const [displayText, setDisplayText] = useState("");
@@ -136,21 +136,21 @@ export const AuthContainer = ({
 
             <div className="space-y-4">
               {[
-                {
-                  icon: Users,
-                  title: "Vibrant Community",
-                  desc: "Connect with like-minded creators",
-                },
-                {
-                  icon: Zap,
-                  title: "Skill Development",
-                  desc: "Learn from industry experts",
-                },
-                {
-                  icon: TrendingUp,
-                  title: "Grow Together",
-                  desc: "Collaborate and elevate your career",
-                },
+{
+  icon: Mail,
+  title: "Beautiful Campaigns",
+  desc: "Create and send emails that engage your audience",
+},
+{
+  icon: Zap,
+  title: "Automated Workflows",
+  desc: "Set up drip sequences and nurture paths on autopilot",
+},
+{
+  icon: TrendingUp,
+  title: "Real-time Analytics",
+  desc: "Track opens, clicks, and subscriber growth",
+},
               ].map((feature, index) => (
                 <motion.div
                   key={feature.title}
