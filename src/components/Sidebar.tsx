@@ -8,6 +8,7 @@ import {
   ChevronLeft,
   LogOut,
   X,
+  LayoutTemplate,
 } from "lucide-react";
 import { Link, useLocation } from "@tanstack/react-router";
 import { brand } from "@/constants/brand";
@@ -34,6 +35,12 @@ const navigationItems: NavItem[] = [
     label: "Campaigns",
     icon: Mail,
     href: "/campaigns",
+  },
+  {
+    id: "templates",
+    label: "Templates",
+    icon: LayoutTemplate,
+    href: "/templates",
   },
   {
     id: "contacts",

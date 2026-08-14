@@ -2,9 +2,9 @@ export const brand = {
   projectName: "Levelup Xperience",
   logo: "/assets/logo.png",
   colors: {
-    primary: "#2ECC71",
-    secondary: "#1A9B7F",
-    accent: "#A4E860",
+    primary: "#2563EB",
+    secondary: "#1E40AF",
+    accent: "#60A5FA",
     text: {
       light: "#FFFFFF",
       dark: "#374151",

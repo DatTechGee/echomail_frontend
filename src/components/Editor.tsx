@@ -10,9 +10,10 @@ import { toast } from "react-hot-toast";
 interface EditorProps {
   onChange: (content: string) => void;
   onEditorReady: (editor: BlockNoteEditor) => void;
+  initialContent?: string;
 }
 
-const Editor = ({ onChange, onEditorReady }: EditorProps) => {
+const Editor = ({ onChange, onEditorReady, initialContent }: EditorProps) => {
   const { mutateAsync: uploadImage } = useUploadImage();
 
   const handleFileUpload = async (file: File): Promise<string> => {
@@ -35,6 +36,18 @@ const Editor = ({ onChange, onEditorReady }: EditorProps) => {
   useEffect(() => {
     onEditorReady(editor);
   }, [editor, onEditorReady]);
+
+  useEffect(() => {
+    if (!initialContent) return;
+    try {
+      const blocks = JSON.parse(initialContent);
+      if (Array.isArray(blocks) && blocks.length > 0) {
+        editor.replaceBlocks(editor.document, blocks);
+      }
+    } catch {
+      // Ignore malformed content
+    }
+  }, [initialContent, editor]);
 
   return (
     <BlockNoteView

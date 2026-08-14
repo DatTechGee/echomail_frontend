@@ -33,6 +33,7 @@ export const SUBSCRIPTION_SOURCE_OPTIONS: SourceOption[] = [
 export const STATUS_OPTIONS = [
   { value: "all", label: "All Status" },
   { value: "active", label: "Active" },
+  { value: "pending", label: "Pending" },
   { value: "unsubscribed", label: "Unsubscribed" },
 ] as const;
 

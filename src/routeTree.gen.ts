@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as JoinNewslettersRouteImport } from './routes/join-newsletters'
 import { Route as DashboardRouteImport } from './routes/_dashboard'
 import { Route as AuthRouteImport } from './routes/_auth'
+import { Route as DashboardTemplatesRouteImport } from './routes/_dashboard/templates'
 import { Route as DashboardSettingsRouteImport } from './routes/_dashboard/settings'
 import { Route as DashboardNewslettersRouteImport } from './routes/_dashboard/newsletters'
 import { Route as DashboardDashboardRouteImport } from './routes/_dashboard/dashboard'
@@ -36,6 +37,11 @@ const DashboardRoute = DashboardRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/_auth',
   getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardTemplatesRoute = DashboardTemplatesRouteImport.update({
+  id: '/templates',
+  path: '/templates',
+  getParentRoute: () => DashboardRoute,
 } as any)
 const DashboardSettingsRoute = DashboardSettingsRouteImport.update({
   id: '/settings',
@@ -107,6 +113,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardDashboardRoute
   '/newsletters': typeof DashboardNewslettersRoute
   '/settings': typeof DashboardSettingsRoute
+  '/templates': typeof DashboardTemplatesRoute
 }
 export interface FileRoutesByTo {
   '/join-newsletters': typeof JoinNewslettersRoute
@@ -121,6 +128,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardDashboardRoute
   '/newsletters': typeof DashboardNewslettersRoute
   '/settings': typeof DashboardSettingsRoute
+  '/templates': typeof DashboardTemplatesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -138,6 +146,7 @@ export interface FileRoutesById {
   '/_dashboard/dashboard': typeof DashboardDashboardRoute
   '/_dashboard/newsletters': typeof DashboardNewslettersRoute
   '/_dashboard/settings': typeof DashboardSettingsRoute
+  '/_dashboard/templates': typeof DashboardTemplatesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -154,6 +163,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/newsletters'
     | '/settings'
+    | '/templates'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/join-newsletters'
@@ -168,6 +178,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/newsletters'
     | '/settings'
+    | '/templates'
   id:
     | '__root__'
     | '/_auth'
@@ -184,6 +195,7 @@ export interface FileRouteTypes {
     | '/_dashboard/dashboard'
     | '/_dashboard/newsletters'
     | '/_dashboard/settings'
+    | '/_dashboard/templates'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -214,6 +226,13 @@ declare module '@tanstack/react-router' {
       fullPath: ''
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_dashboard/templates': {
+      id: '/_dashboard/templates'
+      path: '/templates'
+      fullPath: '/templates'
+      preLoaderRoute: typeof DashboardTemplatesRouteImport
+      parentRoute: typeof DashboardRoute
     }
     '/_dashboard/settings': {
       id: '/_dashboard/settings'
@@ -320,6 +339,7 @@ interface DashboardRouteChildren {
   DashboardDashboardRoute: typeof DashboardDashboardRoute
   DashboardNewslettersRoute: typeof DashboardNewslettersRoute
   DashboardSettingsRoute: typeof DashboardSettingsRoute
+  DashboardTemplatesRoute: typeof DashboardTemplatesRoute
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
@@ -329,6 +349,7 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardDashboardRoute: DashboardDashboardRoute,
   DashboardNewslettersRoute: DashboardNewslettersRoute,
   DashboardSettingsRoute: DashboardSettingsRoute,
+  DashboardTemplatesRoute: DashboardTemplatesRoute,
 }
 
 const DashboardRouteWithChildren = DashboardRoute._addFileChildren(

@@ -15,6 +15,7 @@ export const getSourceLabel = (source: NewsletterSource): string => {
 
 export const getStatusLabel = (status: NewsletterStatus): string => {
   const statusLabels = {
+    pending: "Pending",
     active: "Active",
     unsubscribed: "Unsubscribed",
   };
@@ -23,6 +24,8 @@ export const getStatusLabel = (status: NewsletterStatus): string => {
 
 export const getStatusColor = (status: NewsletterStatus): string => {
   const statusColors = {
+    pending:
+      "text-amber-800 dark:text-amber-300 bg-amber-100 dark:bg-amber-900/30",
     active:
       "text-green-800 dark:text-green-300 bg-green-100 dark:bg-green-900/30",
     unsubscribed:

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export type NewsletterStatus = "active" | "unsubscribed";
+export type NewsletterStatus = "pending" | "active" | "unsubscribed";
 
 export type NewsletterSource =
   | "website"
@@ -18,7 +18,13 @@ export interface NewsletterSubscriber {
   source: NewsletterSource;
   status: NewsletterStatus;
   subscribed_at: string;
+  verified_at?: string | null;
   unsubscribed_at?: string | null;
+  preferences?: {
+    email_updates?: boolean;
+    product_updates?: boolean;
+    promotions?: boolean;
+  } | null;
   created_at: string;
 }
 
@@ -96,6 +102,7 @@ export interface GetSubscribersResponse {
   stats: {
     total: number;
     active: number;
+    pending: number;
     unsubscribed: number;
     today: number;
     this_week: number;

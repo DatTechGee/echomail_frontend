@@ -1,5 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export type CampaignStatus = "draft" | "sent" | "failed";
+export type CampaignStatus =
+  | "draft"
+  | "scheduled"
+  | "sending"
+  | "sent"
+  | "failed";
+
+export type CampaignFrequency = "once" | "daily" | "weekly" | "monthly";
 
 export type RecipientType = "all" | "newsletter" | "groups" | "manual";
 
@@ -20,6 +27,9 @@ export interface Campaign {
   open_rate: number;
   click_rate: number;
   sent_at?: string | null;
+  scheduled_at?: string | null;
+  frequency?: string | null;
+  next_run_at?: string | null;
   created_by?: {
     id: number;
     name: string;
@@ -41,6 +51,8 @@ export interface CreateCampaignRequest {
   content: string;
   recipient_config: RecipientConfig;
   send_immediately?: boolean;
+  scheduled_at?: string;
+  frequency?: string;
 }
 
 export interface UpdateCampaignRequest {
@@ -114,9 +126,69 @@ export interface RecipientPreviewResponse {
   total_count: number;
 }
 
+export interface CampaignPreviewResponse {
+  subject: string;
+  html: string;
+}
+
+export type RecipientStatus = "pending" | "sent" | "failed" | "bounced";
+
+export interface CampaignRecipient {
+  id: number;
+  campaign_id: number;
+  email: string;
+  token: string;
+  status: RecipientStatus;
+  opened_at?: string | null;
+  clicked_at?: string | null;
+  error_message?: string | null;
+  bounced_at?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CampaignRecipientsRequest {
+  status?: RecipientStatus;
+  search?: string;
+  per_page?: number;
+  page?: number;
+}
+
+export interface RecipientsSummary {
+  pending: number;
+  sent: number;
+  failed: number;
+  bounced: number;
+  opened: number;
+  clicked: number;
+}
+
+export interface CampaignRecipientsResponse {
+  recipients: CampaignRecipient[];
+  pagination: PaginationMeta;
+  summary: RecipientsSummary;
+}
+
+export interface MonthlyActivityPoint {
+  month: string;
+  sent: number;
+  opens: number;
+  clicks: number;
+}
+
+export interface EngagementFunnel {
+  sent: number;
+  opened: number;
+  clicked: number;
+  open_rate: number;
+  click_rate: number;
+}
+
 export interface GetStatsResponse {
   stats: CampaignStats;
   recent_campaigns: Campaign[];
+  monthly_activity: MonthlyActivityPoint[];
+  engagement: EngagementFunnel;
 }
 
 // UI Types

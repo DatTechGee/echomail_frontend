@@ -9,7 +9,7 @@ import { Toaster } from "react-hot-toast";
 import { NotFoundPage } from "@/components/not-found";
 import { LoadingScreen } from "@/components/LoadingScreen";
 
-export const queryClient = new QueryClient({
+const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 1000 * 60 * 5,

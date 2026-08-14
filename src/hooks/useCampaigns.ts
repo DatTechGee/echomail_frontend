@@ -5,6 +5,7 @@ import type {
   UpdateCampaignRequest,
   GetCampaignsRequest,
   RecipientPreviewRequest,
+  CampaignRecipientsRequest,
 } from "@/types/campaign";
 
 // Query Keys
@@ -92,6 +93,19 @@ export const useSendCampaign = () => {
   });
 };
 
+export const useRetryCampaign = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (uuid: string) => campaignService.retryCampaign(uuid),
+    onSuccess: (_, uuid) => {
+      queryClient.invalidateQueries({ queryKey: campaignKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: campaignKeys.detail(uuid) });
+      queryClient.invalidateQueries({ queryKey: campaignKeys.stats() });
+    },
+  });
+};
+
 export const useDuplicateCampaign = () => {
   const queryClient = useQueryClient();
 
@@ -109,6 +123,39 @@ export const useRecipientPreview = () => {
   return useMutation({
     mutationFn: (data: RecipientPreviewRequest) =>
       campaignService.getRecipientPreview(data),
+  });
+};
+
+export const useTestSendCampaign = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ uuid, email }: { uuid: string; email: string }) =>
+      campaignService.testSendCampaign(uuid, { email }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: campaignKeys.lists() });
+    },
+  });
+};
+
+export const usePreviewCampaign = () => {
+  return useMutation({
+    mutationFn: (uuid: string) => campaignService.previewCampaign(uuid),
+  });
+};
+
+export const useCampaignRecipients = (uuid: string, params?: CampaignRecipientsRequest) => {
+  return useQuery({
+    queryKey: ["campaigns", "recipients", uuid, params],
+    queryFn: () => campaignService.getRecipients(uuid, params),
+    enabled: !!uuid,
+  });
+};
+
+export const useMarkBounced = () => {
+  return useMutation({
+    mutationFn: ({ uuid, emails }: { uuid: string; emails: string[] }) =>
+      campaignService.markBounced(uuid, emails),
   });
 };
 

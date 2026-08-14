@@ -15,6 +15,8 @@ import {
   RefreshCw,
   ChevronLeft,
   ChevronRight,
+  ArrowUp,
+  ArrowDown,
 } from "lucide-react";
 import { brand } from "@/constants/brand";
 import {
@@ -217,7 +219,11 @@ export const Newsletters = () => {
           </div>
           <motion.button
             onClick={() => refetch()}
-            className="flex items-center space-x-2 mx-auto px-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition-colors"
+            className="flex items-center space-x-2 mx-auto px-4 py-2 rounded-lg text-white transition-colors"
+            style={{
+              backgroundColor: brand.colors.primary,
+              boxShadow: `0 4px 12px ${brand.colors.primary}25`,
+            }}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
@@ -253,6 +259,14 @@ export const Newsletters = () => {
             </div>
             <div className="text-sm text-slate-600 dark:text-slate-400">
               Active
+            </div>
+          </div>
+          <div className="text-center">
+            <div className="text-2xl font-bold text-amber-500">
+              {stats?.pending || 0}
+            </div>
+            <div className="text-sm text-slate-600 dark:text-slate-400">
+              Pending
             </div>
           </div>
           <div className="text-center">
@@ -455,7 +469,8 @@ export const Newsletters = () => {
           {isLoading ? (
             <div className="text-center py-12">
               <motion.div
-                className="w-8 h-8 border-2 border-slate-300 border-t-blue-500 rounded-full mx-auto mb-4"
+                className="w-8 h-8 border-2 border-slate-300 rounded-full mx-auto mb-4"
+                style={{ borderTopColor: brand.colors.primary }}
                 animate={{ rotate: 360 }}
                 transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
               />
@@ -474,6 +489,23 @@ export const Newsletters = () => {
                   ? "Try adjusting your search or filter criteria."
                   : "Share your newsletter link to get your first subscribers!"}
               </p>
+              {!searchQuery &&
+                statusFilter === "all" &&
+                !sourceFilter && (
+                  <motion.button
+                    onClick={handleCopyLink}
+                    className="inline-flex items-center space-x-2 mt-4 px-5 py-2.5 rounded-lg font-medium text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                    style={{
+                      backgroundColor: brand.colors.primary,
+                      boxShadow: `0 4px 12px ${brand.colors.primary}25`,
+                    }}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <Link2 className="w-4 h-4" />
+                    <span>Copy Signup Link</span>
+                  </motion.button>
+                )}
             </div>
           ) : (
             <>
@@ -499,8 +531,18 @@ export const Newsletters = () => {
                       >
                         Subscriber
                         {sortBy === "email" && (
-                          <span className="ml-1">
-                            {sortOrder === "asc" ? "↑" : "↓"}
+                          <span className="ml-1 inline-flex items-center">
+                            {sortOrder === "asc" ? (
+                              <ArrowUp
+                                className="w-3.5 h-3.5"
+                                style={{ color: brand.colors.primary }}
+                              />
+                            ) : (
+                              <ArrowDown
+                                className="w-3.5 h-3.5"
+                                style={{ color: brand.colors.primary }}
+                              />
+                            )}
                           </span>
                         )}
                       </th>
@@ -510,8 +552,18 @@ export const Newsletters = () => {
                       >
                         Phone
                         {sortBy === "phone" && (
-                          <span className="ml-1">
-                            {sortOrder === "asc" ? "↑" : "↓"}
+                          <span className="ml-1 inline-flex items-center">
+                            {sortOrder === "asc" ? (
+                              <ArrowUp
+                                className="w-3.5 h-3.5"
+                                style={{ color: brand.colors.primary }}
+                              />
+                            ) : (
+                              <ArrowDown
+                                className="w-3.5 h-3.5"
+                                style={{ color: brand.colors.primary }}
+                              />
+                            )}
                           </span>
                         )}
                       </th>
@@ -521,8 +573,18 @@ export const Newsletters = () => {
                       >
                         Subscribed
                         {sortBy === "subscribed_at" && (
-                          <span className="ml-1">
-                            {sortOrder === "asc" ? "↑" : "↓"}
+                          <span className="ml-1 inline-flex items-center">
+                            {sortOrder === "asc" ? (
+                              <ArrowUp
+                                className="w-3.5 h-3.5"
+                                style={{ color: brand.colors.primary }}
+                              />
+                            ) : (
+                              <ArrowDown
+                                className="w-3.5 h-3.5"
+                                style={{ color: brand.colors.primary }}
+                              />
+                            )}
                           </span>
                         )}
                       </th>
@@ -532,8 +594,18 @@ export const Newsletters = () => {
                       >
                         Status
                         {sortBy === "status" && (
-                          <span className="ml-1">
-                            {sortOrder === "asc" ? "↑" : "↓"}
+                          <span className="ml-1 inline-flex items-center">
+                            {sortOrder === "asc" ? (
+                              <ArrowUp
+                                className="w-3.5 h-3.5"
+                                style={{ color: brand.colors.primary }}
+                              />
+                            ) : (
+                              <ArrowDown
+                                className="w-3.5 h-3.5"
+                                style={{ color: brand.colors.primary }}
+                              />
+                            )}
                           </span>
                         )}
                       </th>
@@ -543,8 +615,18 @@ export const Newsletters = () => {
                       >
                         Source
                         {sortBy === "source" && (
-                          <span className="ml-1">
-                            {sortOrder === "asc" ? "↑" : "↓"}
+                          <span className="ml-1 inline-flex items-center">
+                            {sortOrder === "asc" ? (
+                              <ArrowUp
+                                className="w-3.5 h-3.5"
+                                style={{ color: brand.colors.primary }}
+                              />
+                            ) : (
+                              <ArrowDown
+                                className="w-3.5 h-3.5"
+                                style={{ color: brand.colors.primary }}
+                              />
+                            )}
                           </span>
                         )}
                       </th>
@@ -613,9 +695,7 @@ export const Newsletters = () => {
                               <span
                                 className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(subscriber.status)}`}
                               >
-                                {subscriber.status === "active"
-                                  ? "Active"
-                                  : "Unsubscribed"}
+                                {getStatusLabel(subscriber.status)}
                               </span>
                             </td>
                             <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">

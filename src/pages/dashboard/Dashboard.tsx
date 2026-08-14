@@ -25,6 +25,18 @@ import {
   formatDate,
   getCampaignPerformance,
 } from "@/utils/campaign";
+import {
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  LineChart,
+  Line,
+} from "recharts";
 
 interface StatCard {
   title: string;
@@ -122,7 +134,7 @@ export const Dashboard = () => {
       title: "Newsletter Settings",
       description: "Configure newsletter signup",
       icon: Globe,
-      color: "#8b5cf6",
+      color: brand.colors.accent,
       href: "/newsletters",
       onClick: () => navigate({ to: "/newsletters" }),
     },
@@ -263,6 +275,224 @@ export const Dashboard = () => {
           </motion.div>
         ))}
       </motion.div>
+
+      {/* Charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Monthly Activity Chart */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15 }}
+          className="relative"
+        >
+          <div className="absolute inset-0 bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl rounded-2xl border border-slate-200/50 dark:border-slate-700/50" />
+
+          <div className="relative p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100">
+                Monthly Activity
+              </h2>
+              <span className="text-xs text-slate-500 dark:text-slate-400">
+                Last 6 months
+              </span>
+            </div>
+
+            {campaignStats?.data.data.monthly_activity?.length ? (
+              <div className="h-72">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={campaignStats.data.data.monthly_activity}
+                    margin={{ top: 5, right: 10, left: -15, bottom: 0 }}
+                  >
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      stroke="#cbd5e1"
+                      strokeOpacity={0.4}
+                      vertical={false}
+                    />
+                    <XAxis
+                      dataKey="month"
+                      tick={{ fill: "#94a3b8", fontSize: 12 }}
+                      axisLine={false}
+                      tickLine={false}
+                    />
+                    <YAxis
+                      tick={{ fill: "#94a3b8", fontSize: 12 }}
+                      axisLine={false}
+                      tickLine={false}
+                      allowDecimals={false}
+                    />
+                    <Tooltip
+                      cursor={{ fill: "#94a3b8", opacity: 0.1 }}
+                      contentStyle={{
+                        borderRadius: 12,
+                        border: "1px solid #e2e8f0",
+                        fontSize: 13,
+                      }}
+                    />
+                    <Legend wrapperStyle={{ fontSize: 13 }} />
+                    <Bar
+                      dataKey="sent"
+                      name="Sent"
+                      fill={brand.colors.primary}
+                      radius={[6, 6, 0, 0]}
+                      maxBarSize={28}
+                    />
+                    <Bar
+                      dataKey="opens"
+                      name="Opens"
+                      fill={brand.colors.accent}
+                      radius={[6, 6, 0, 0]}
+                      maxBarSize={28}
+                    />
+                    <Bar
+                      dataKey="clicks"
+                      name="Clicks"
+                      fill={brand.colors.secondary}
+                      radius={[6, 6, 0, 0]}
+                      maxBarSize={28}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <div className="text-center py-16">
+                <BarChart3 className="w-10 h-10 text-slate-400 mx-auto mb-3" />
+                <p className="text-sm text-slate-600 dark:text-slate-400">
+                  No activity to display yet.
+                </p>
+              </div>
+            )}
+          </div>
+        </motion.div>
+
+        {/* Engagement Funnel */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="relative"
+        >
+          <div className="absolute inset-0 bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl rounded-2xl border border-slate-200/50 dark:border-slate-700/50" />
+
+          <div className="relative p-6">
+            <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100 mb-6">
+              Engagement Overview
+            </h2>
+
+            {campaignStats?.data.data.engagement ? (
+              <>
+                <div className="h-56 mb-6">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart
+                      layout="vertical"
+                      data={[
+                        {
+                          stage: "Sent",
+                          count:
+                            campaignStats.data.data.engagement.sent || 0,
+                        },
+                        {
+                          stage: "Opened",
+                          count:
+                            campaignStats.data.data.engagement.opened || 0,
+                        },
+                        {
+                          stage: "Clicked",
+                          count:
+                            campaignStats.data.data.engagement.clicked || 0,
+                        },
+                      ]}
+                      margin={{ top: 0, right: 20, left: 10, bottom: 0 }}
+                    >
+                      <CartesianGrid
+                        strokeDasharray="3 3"
+                        stroke="#cbd5e1"
+                        strokeOpacity={0.4}
+                        horizontal={false}
+                      />
+                      <XAxis
+                        type="number"
+                        tick={{ fill: "#94a3b8", fontSize: 12 }}
+                        axisLine={false}
+                        tickLine={false}
+                        allowDecimals={false}
+                      />
+                      <YAxis
+                        type="category"
+                        dataKey="stage"
+                        tick={{ fill: "#64748b", fontSize: 13 }}
+                        axisLine={false}
+                        tickLine={false}
+                        width={70}
+                      />
+                      <Tooltip
+                        cursor={{ fill: "#94a3b8", opacity: 0.1 }}
+                        contentStyle={{
+                          borderRadius: 12,
+                          border: "1px solid #e2e8f0",
+                          fontSize: 13,
+                        }}
+                      />
+                      <Bar
+                        dataKey="count"
+                        name="Recipients"
+                        fill={brand.colors.primary}
+                        radius={[0, 6, 6, 0]}
+                        maxBarSize={26}
+                      />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+
+                <div className="grid grid-cols-3 gap-3">
+                  {[
+                    {
+                      label: "Open Rate",
+                      value: `${campaignStats.data.data.engagement.open_rate || 0}%`,
+                      color: brand.colors.accent,
+                    },
+                    {
+                      label: "Click Rate",
+                      value: `${campaignStats.data.data.engagement.click_rate || 0}%`,
+                      color: brand.colors.secondary,
+                    },
+                    {
+                      label: "Total Sent",
+                      value: formatRecipientCount(
+                        campaignStats.data.data.engagement.sent || 0
+                      ),
+                      color: brand.colors.primary,
+                    },
+                  ].map((m) => (
+                    <div
+                      key={m.label}
+                      className="text-center p-3 rounded-xl bg-slate-50/60 dark:bg-slate-700/30"
+                    >
+                      <div
+                        className="text-xl font-bold"
+                        style={{ color: m.color }}
+                      >
+                        {m.value}
+                      </div>
+                      <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                        {m.label}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <div className="text-center py-16">
+                <BarChart3 className="w-10 h-10 text-slate-400 mx-auto mb-3" />
+                <p className="text-sm text-slate-600 dark:text-slate-400">
+                  No engagement data yet.
+                </p>
+              </div>
+            )}
+          </div>
+        </motion.div>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Recent Campaigns */}
@@ -442,38 +672,94 @@ export const Dashboard = () => {
             </h2>
 
             <div className="space-y-6">
-              {/* Total Emails Sent */}
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
-                    Emails Sent
-                  </span>
-                  <span className="text-lg font-bold text-slate-800 dark:text-slate-200">
-                    {formatRecipientCount(
-                      campaignStatsData?.total_emails_sent || 0
-                    )}
-                  </span>
+              {/* Performance metrics */}
+              {([
+                {
+                  label: "Emails Sent",
+                  value: formatRecipientCount(
+                    campaignStatsData?.total_emails_sent || 0
+                  ),
+                  color: brand.colors.primary,
+                },
+                {
+                  label: "Open Rate",
+                  value: `${Math.round(
+                    campaignStatsData?.average_open_rate || 0
+                  )}%`,
+                  pct: Math.round(campaignStatsData?.average_open_rate || 0),
+                  color: brand.colors.accent,
+                },
+                {
+                  label: "Click Rate",
+                  value: `${Math.round(
+                    campaignStatsData?.average_click_rate || 0
+                  )}%`,
+                  pct: Math.round(
+                    campaignStatsData?.average_click_rate || 0
+                  ),
+                  color: brand.colors.secondary,
+                },
+              ] as Array<{
+                label: string;
+                value: string;
+                pct?: number;
+                color: string;
+              }>).map((metric, index) => (
+                <div key={metric.label} className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
+                      {metric.label}
+                    </span>
+                    <span className="text-lg font-bold text-slate-800 dark:text-slate-200">
+                      {metric.value}
+                    </span>
+                  </div>
+                  {typeof metric.pct === "number" && (
+                    <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
+                      <motion.div
+                        className="h-2 rounded-full"
+                        style={{ backgroundColor: metric.color }}
+                        initial={{ width: 0 }}
+                        animate={{
+                          width: `${Math.max(
+                            2,
+                            Math.min(100, metric.pct)
+                          )}%`,
+                        }}
+                        transition={{ delay: 0.5 + index * 0.1, duration: 0.8 }}
+                      />
+                    </div>
+                  )}
                 </div>
-                <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
-                  <motion.div
-                    className="h-2 rounded-full"
-                    style={{ backgroundColor: brand.colors.primary }}
-                    initial={{ width: 0 }}
-                    animate={{ width: "85%" }}
-                    transition={{ delay: 0.5, duration: 0.8 }}
-                  />
-                </div>
-              </div>
+              ))}
             </div>
 
-            <div className="flex items-center justify-center space-x-6 mt-6 pt-4 border-t border-slate-200/50 dark:border-slate-600/50">
+            <div className="flex items-center justify-center flex-wrap gap-x-6 gap-y-2 mt-6 pt-4 border-t border-slate-200/50 dark:border-slate-600/50">
               <div className="flex items-center space-x-2">
                 <div
                   className="w-3 h-3 rounded-full"
                   style={{ backgroundColor: brand.colors.primary }}
                 ></div>
                 <span className="text-sm text-slate-600 dark:text-slate-400">
-                  Sent
+                  Sent: {formatRecipientCount(campaignStatsData?.total_emails_sent || 0)}
+                </span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div
+                  className="w-3 h-3 rounded-full"
+                  style={{ backgroundColor: brand.colors.accent }}
+                ></div>
+                <span className="text-sm text-slate-600 dark:text-slate-400">
+                  Opens: {formatRecipientCount(campaignStatsData?.total_opens || 0)}
+                </span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div
+                  className="w-3 h-3 rounded-full"
+                  style={{ backgroundColor: brand.colors.secondary }}
+                ></div>
+                <span className="text-sm text-slate-600 dark:text-slate-400">
+                  Clicks: {formatRecipientCount(campaignStatsData?.total_clicks || 0)}
                 </span>
               </div>
             </div>

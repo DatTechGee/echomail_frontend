@@ -14,6 +14,11 @@ import {
   Smartphone,
   Save,
   AlertCircle,
+  Webhook,
+  Plus,
+  Trash2,
+  RefreshCw,
+  Copy,
 } from "lucide-react";
 import { brand } from "@/constants/brand";
 import { useAuthStore } from "@/stores/auth";
@@ -22,6 +27,13 @@ import {
   useChangePassword,
   useToggleTwoFactor,
 } from "@/hooks/useAuth";
+import { WEBHOOK_EVENTS } from "@/types/webhook";
+import {
+  useWebhooks,
+  useCreateWebhook,
+  useDeleteWebhook,
+  useTestWebhook,
+} from "@/hooks/useWebhooks";
 import { toast } from "react-hot-toast";
 
 interface ProfileData {
@@ -63,9 +75,82 @@ export const Settings = () => {
   const [showTwoFactorPassword, setShowTwoFactorPassword] = useState(false);
   const [twoFactorPassword, setTwoFactorPassword] = useState("");
 
+  const [webhookUrl, setWebhookUrl] = useState("");
+  const [webhookEvents, setWebhookEvents] = useState<string[]>([]);
+
   const updateProfileMutation = useUpdateProfile();
   const changePasswordMutation = useChangePassword();
   const toggleTwoFactorMutation = useToggleTwoFactor();
+
+  const {
+    data: webhooksData,
+    isLoading: webhooksLoading,
+  } = useWebhooks();
+  const createWebhookMutation = useCreateWebhook();
+  const deleteWebhookMutation = useDeleteWebhook();
+  const testWebhookMutation = useTestWebhook();
+
+  const webhooks = webhooksData?.data?.webhooks || [];
+
+  const toggleWebhookEvent = (event: string) => {
+    setWebhookEvents((prev) =>
+      prev.includes(event)
+        ? prev.filter((e) => e !== event)
+        : [...prev, event]
+    );
+  };
+
+  const handleCreateWebhook = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!webhookUrl.trim()) {
+      toast.error("Please enter a webhook URL");
+      return;
+    }
+
+    if (webhookEvents.length === 0) {
+      toast.error("Please select at least one event");
+      return;
+    }
+
+    try {
+      await createWebhookMutation.mutateAsync({
+        url: webhookUrl.trim(),
+        events: webhookEvents,
+      });
+      setWebhookUrl("");
+      setWebhookEvents([]);
+      toast.success("Webhook created successfully!");
+    } catch (error: any) {
+      toast.error(
+        error.response?.data?.message || "Failed to create webhook"
+      );
+    }
+  };
+
+  const handleDeleteWebhook = async (id: number) => {
+    if (!window.confirm("Are you sure you want to delete this webhook?")) {
+      return;
+    }
+
+    try {
+      await deleteWebhookMutation.mutateAsync(id);
+      toast.success("Webhook deleted");
+    } catch (error: any) {
+      toast.error(
+        error.response?.data?.message || "Failed to delete webhook"
+      );
+    }
+  };
+
+  const handleTestWebhook = async (id: number) => {
+    try {
+      await testWebhookMutation.mutateAsync(id);
+      toast.success("Test ping sent");
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Failed to send test ping");
+    }
+  };
 
   // Update local state when user data changes
   useEffect(() => {
@@ -82,6 +167,7 @@ export const Settings = () => {
   const tabs = [
     { id: "profile", label: "Profile", icon: User },
     { id: "security", label: "Security", icon: Shield },
+    { id: "developers", label: "Developers", icon: Webhook },
   ];
 
   const handleProfileSubmit = async (e: React.FormEvent) => {
@@ -180,7 +266,13 @@ export const Settings = () => {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
-          <div className="text-slate-500 dark:text-slate-400">Loading...</div>
+          <motion.div
+            className="w-10 h-10 border-3 border-slate-300 rounded-full mx-auto mb-4"
+            style={{ borderTopColor: brand.colors.primary }}
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          />
+          <p className="text-slate-600 dark:text-slate-400">Loading...</p>
         </div>
       </div>
     );
@@ -747,7 +839,200 @@ export const Settings = () => {
                           </div>
                         </motion.div>
                       )}
-                    </AnimatePresence>
+            {activeTab === "developers" && (
+              <motion.div
+                key="developers"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+                className="space-y-8"
+              >
+                {/* Create Webhook */}
+                <div>
+                  <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100 mb-6">
+                    Webhooks
+                  </h2>
+
+                  <form
+                    onSubmit={handleCreateWebhook}
+                    className="space-y-4 p-4 bg-slate-50/50 dark:bg-slate-800/50 rounded-xl"
+                  >
+                    <div className="space-y-2">
+                      <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+                        Endpoint URL
+                      </label>
+                      <input
+                        type="url"
+                        value={webhookUrl}
+                        onChange={(e) => setWebhookUrl(e.target.value)}
+                        className="w-full px-4 py-3 bg-white/80 dark:bg-slate-700/80 border border-slate-200/50 dark:border-slate-600/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-opacity-50 transition-all duration-200 text-slate-800 dark:text-slate-200"
+                        style={
+                          {
+                            "--tw-ring-color": `${brand.colors.primary}50`,
+                          } as React.CSSProperties
+                        }
+                        placeholder="https://your-app.com/webhook"
+                        required
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+                        Events
+                      </label>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                        {WEBHOOK_EVENTS.map((event) => (
+                          <button
+                            key={event.value}
+                            type="button"
+                            onClick={() => toggleWebhookEvent(event.value)}
+                            className={`px-3 py-2 rounded-lg text-sm font-medium border transition-all duration-200 ${
+                              webhookEvents.includes(event.value)
+                                ? "text-white border-transparent"
+                                : "border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-400"
+                            }`}
+                            style={{
+                              backgroundColor: webhookEvents.includes(
+                                event.value
+                              )
+                                ? brand.colors.primary
+                                : "transparent",
+                            }}
+                          >
+                            {event.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <motion.button
+                      type="submit"
+                      disabled={createWebhookMutation.isPending}
+                      className="flex items-center space-x-2 px-6 py-3 rounded-xl font-medium text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                      style={{ backgroundColor: brand.colors.primary }}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <Plus className="w-5 h-5" />
+                      <span>
+                        {createWebhookMutation.isPending
+                          ? "Creating..."
+                          : "Create Webhook"}
+                      </span>
+                    </motion.button>
+                  </form>
+                </div>
+
+                {/* Webhook List */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">
+                    Your Webhooks
+                  </h3>
+
+                  {webhooksLoading ? (
+                    <div className="flex items-center justify-center py-8">
+                      <motion.div
+                        className="w-8 h-8 border-3 border-slate-300 rounded-full"
+                        style={{ borderTopColor: brand.colors.primary }}
+                        animate={{ rotate: 360 }}
+                        transition={{
+                          duration: 1,
+                          repeat: Infinity,
+                          ease: "linear",
+                        }}
+                      />
+                    </div>
+                  ) : webhooks.length === 0 ? (
+                    <p className="text-sm text-slate-600 dark:text-slate-400">
+                      No webhooks configured yet.
+                    </p>
+                  ) : (
+                    webhooks.map((webhook) => (
+                      <div
+                        key={webhook.id}
+                        className="p-4 bg-slate-50/50 dark:bg-slate-800/50 rounded-xl space-y-3"
+                      >
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="min-w-0 space-y-1">
+                            <div className="flex items-center space-x-2">
+                              <span
+                                className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                                  webhook.active
+                                    ? "text-green-800 dark:text-green-300 bg-green-100 dark:bg-green-900/30"
+                                    : "text-slate-600 dark:text-slate-400 bg-slate-200 dark:bg-slate-700"
+                                }`}
+                              >
+                                {webhook.active ? "Active" : "Inactive"}
+                              </span>
+                              <span className="text-sm text-slate-500 dark:text-slate-400">
+                                #{webhook.id}
+                              </span>
+                            </div>
+                            <p className="text-sm font-medium text-slate-800 dark:text-slate-200 truncate">
+                              {webhook.url}
+                            </p>
+                            <div className="flex flex-wrap gap-1.5">
+                              {webhook.events.map((event) => (
+                                <span
+                                  key={event}
+                                  className="px-2 py-0.5 rounded text-xs"
+                                  style={{
+                                    backgroundColor: `${brand.colors.primary}15`,
+                                    color: brand.colors.primary,
+                                  }}
+                                >
+                                  {event}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                          <div className="flex items-center space-x-2 shrink-0">
+                            <motion.button
+                              onClick={() => handleTestWebhook(webhook.id)}
+                              disabled={testWebhookMutation.isPending}
+                              className="p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all duration-200 disabled:opacity-50"
+                              title="Send test ping"
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.9 }}
+                            >
+                              <RefreshCw className="w-4 h-4" />
+                            </motion.button>
+                            <motion.button
+                              onClick={() => handleDeleteWebhook(webhook.id)}
+                              disabled={deleteWebhookMutation.isPending}
+                              className="p-2 rounded-lg text-red-600 hover:bg-red-100 dark:hover:bg-red-900/30 transition-all duration-200 disabled:opacity-50"
+                              title="Delete webhook"
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.9 }}
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </motion.button>
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-2 text-xs text-slate-500 dark:text-slate-400">
+                          <span>Secret:</span>
+                          <code className="px-1.5 py-0.5 bg-slate-200 dark:bg-slate-700 rounded font-mono">
+                            {webhook.secret}
+                          </code>
+                          <button
+                            onClick={() => {
+                              navigator.clipboard.writeText(webhook.secret);
+                              toast.success("Secret copied");
+                            }}
+                            className="p-1 rounded hover:bg-slate-200 dark:hover:bg-slate-700 transition-all duration-200"
+                            title="Copy secret"
+                          >
+                            <Copy className="w-3 h-3" />
+                          </button>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
                     {user.two_factor_enabled && (
                       <motion.div

@@ -345,7 +345,11 @@ mike.johnson@example.com,,Prospects`;
           <div className="text-red-500 mb-4">Failed to load contacts</div>
           <motion.button
             onClick={() => refetchContacts()}
-            className="flex items-center space-x-2 mx-auto px-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition-colors"
+            className="flex items-center space-x-2 mx-auto px-4 py-2 rounded-lg text-white transition-colors"
+            style={{
+              backgroundColor: brand.colors.primary,
+              boxShadow: `0 4px 12px ${brand.colors.primary}25`,
+            }}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
@@ -565,7 +569,8 @@ mike.johnson@example.com,,Prospects`;
                   {contactsLoading ? (
                     <div className="text-center py-12">
                       <motion.div
-                        className="w-8 h-8 border-2 border-slate-300 border-t-blue-500 rounded-full mx-auto mb-4"
+                        className="w-8 h-8 border-2 border-slate-300 rounded-full mx-auto mb-4"
+                        style={{ borderTopColor: brand.colors.primary }}
                         animate={{ rotate: 360 }}
                         transition={{
                           duration: 1,
@@ -590,6 +595,23 @@ mike.johnson@example.com,,Prospects`;
                           ? "Try adjusting your search or filter criteria."
                           : "Add your first contact to get started!"}
                       </p>
+                      {!searchQuery &&
+                        selectedGroup === "all" &&
+                        !selectedSource && (
+                          <motion.button
+                            onClick={() => setActiveTab("add")}
+                            className="inline-flex items-center space-x-2 mt-4 px-5 py-2.5 rounded-lg font-medium text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                            style={{
+                              backgroundColor: brand.colors.primary,
+                              boxShadow: `0 4px 12px ${brand.colors.primary}25`,
+                            }}
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                          >
+                            <UserPlus className="w-4 h-4" />
+                            <span>Add Your First Contact</span>
+                          </motion.button>
+                        )}
                     </div>
                   ) : (
                     <>

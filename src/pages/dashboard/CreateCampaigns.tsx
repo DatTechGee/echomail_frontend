@@ -13,15 +13,23 @@ import {
   CheckCircle,
   AlertCircle,
   RefreshCw,
+  Calendar,
+  Clock,
+  LayoutTemplate,
 } from "lucide-react";
 import { BlockNoteEditor } from "@blocknote/core";
 import { brand } from "@/constants/brand";
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import { toast } from "react-hot-toast";
 import { useCreateCampaign, useCampaign } from "@/hooks/useCampaigns";
+import { useTemplate, useTemplates } from "@/hooks/useTemplates";
 import { useContactGroups } from "@/hooks/useContacts";
 import { campaignService } from "@/services/api/campaign.services";
-import { RECIPIENT_MODE_OPTIONS, CAMPAIGN_TABS } from "@/constants/campaign";
+import {
+  RECIPIENT_MODE_OPTIONS,
+  CAMPAIGN_TABS,
+  FREQUENCY_OPTIONS,
+} from "@/constants/campaign";
 import {
   validateCampaignName,
   validateCampaignSubject,
@@ -30,7 +38,11 @@ import {
   calculateEstimatedSendTime,
   formatRecipientCount,
 } from "@/utils/campaign";
-import type { RecipientType, RecipientConfig } from "@/types/campaign";
+import type {
+  RecipientType,
+  RecipientConfig,
+  CampaignFrequency,
+} from "@/types/campaign";
 
 // Lazy load the Editor component
 const Editor = lazy(() => import("@/components/Editor"));
@@ -56,12 +68,19 @@ export const CreateCampaigns = () => {
   const navigate = useNavigate();
   const searchParams = useSearch({ strict: false });
   const duplicateUuid = searchParams?.duplicate as string;
+  const templateUuid = searchParams?.template as string;
 
   // Form state
   const [campaignName, setCampaignName] = useState("");
   const [subject, setSubject] = useState("");
   const [content, setContent] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  // Scheduling state
+  const [scheduleEnabled, setScheduleEnabled] = useState(false);
+  const [scheduledAt, setScheduledAt] = useState("");
+  const [frequency, setFrequency] = useState<CampaignFrequency>("once");
+  const [templatePickerOpen, setTemplatePickerOpen] = useState(false);
 
   // Recipient targeting
   const [recipientMode, setRecipientMode] = useState<RecipientType>("all");
@@ -88,8 +107,24 @@ export const CreateCampaigns = () => {
   const { data: duplicateCampaignData } = useCampaign(duplicateUuid!, {
     enabled: !!duplicateUuid,
   });
+  const { data: templateData } = useTemplate(templateUuid, {
+    enabled: !!templateUuid,
+  });
+  const { data: templatesData } = useTemplates();
 
   const availableGroups = groupsData?.data.data.groups || [];
+  const availableTemplates = templatesData?.data.data.templates || [];
+
+  // Load template data
+  useEffect(() => {
+    if (templateUuid && templateData?.data.data.template) {
+      const template = templateData.data.data.template;
+      setCampaignName(template.name);
+      setSubject(template.subject);
+      setContent(template.content || "");
+      toast.success("Template loaded!");
+    }
+  }, [templateUuid, templateData]);
 
   // Load duplicate campaign data
   useEffect(() => {
@@ -256,6 +291,11 @@ export const CreateCampaigns = () => {
       return;
     }
 
+    if (scheduleEnabled && !scheduledAt) {
+      toast.error("Please choose a date and time to schedule the campaign");
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -268,20 +308,35 @@ export const CreateCampaigns = () => {
             : undefined,
       };
 
-      const response = await createCampaignMutation.mutateAsync({
+      const payload: any = {
         name: campaignName,
         subject: subject,
         content: content,
         recipient_config: recipientConfig,
-        send_immediately: sendImmediately,
-      });
+        send_immediately: sendImmediately && !scheduleEnabled,
+      };
+
+      if (scheduleEnabled) {
+        payload.scheduled_at = new Date(scheduledAt).toISOString();
+        payload.frequency = frequency;
+      }
+
+      const response = await createCampaignMutation.mutateAsync(payload);
 
       if (response.data.status === 1) {
-        toast.success(
-          sendImmediately
-            ? "Campaign created and sent successfully!"
-            : "Campaign saved as draft successfully!"
-        );
+        if (scheduleEnabled) {
+          toast.success(
+            frequency && frequency !== "once"
+              ? `Campaign scheduled to repeat ${frequency}!`
+              : "Campaign scheduled successfully!"
+          );
+        } else {
+          toast.success(
+            sendImmediately
+              ? "Campaign created and queued for sending!"
+              : "Campaign saved as draft successfully!"
+          );
+        }
         navigate({ to: "/campaigns" });
       }
     } catch (error: any) {
@@ -295,6 +350,15 @@ export const CreateCampaigns = () => {
 
   const handleGoBack = () => {
     navigate({ to: "/campaigns" });
+  };
+
+  const loadTemplate = (template: any) => {
+    setCampaignName(template.name);
+    setSubject(template.subject);
+    setContent(template.content || "");
+    setTemplatePickerOpen(false);
+    setActiveTab("compose");
+    toast.success("Template loaded!");
   };
 
   const refreshPreview = () => {
@@ -366,7 +430,13 @@ export const CreateCampaigns = () => {
             ) : (
               <Send className="w-4 h-4" />
             )}
-            <span>{isLoading ? "Sending..." : "Send Campaign"}</span>
+            <span>
+              {isLoading
+                ? "Sending..."
+                : scheduleEnabled
+                  ? "Schedule Campaign"
+                  : "Send Campaign"}
+            </span>
           </motion.button>
         </div>
       </motion.div>
@@ -436,9 +506,24 @@ export const CreateCampaigns = () => {
               >
                 {/* Campaign Details */}
                 <div className="space-y-4">
-                  <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100">
-                    Campaign Details
-                  </h2>
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100">
+                      Campaign Details
+                    </h2>
+                    <motion.button
+                      onClick={() => setTemplatePickerOpen(true)}
+                      className="flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200"
+                      style={{
+                        backgroundColor: `${brand.colors.primary}10`,
+                        color: brand.colors.primary,
+                      }}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <LayoutTemplate className="w-4 h-4" />
+                      <span>Load Template</span>
+                    </motion.button>
+                  </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
@@ -533,6 +618,120 @@ export const CreateCampaigns = () => {
                     <p className="text-sm text-red-600 dark:text-red-400">
                       {errors.content}
                     </p>
+                  )}
+                </div>
+
+                {/* Scheduling */}
+                <div className="space-y-4">
+                  <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100">
+                    Scheduling
+                  </h2>
+
+                  <div className="flex items-center space-x-4">
+                    <button
+                      type="button"
+                      onClick={() => setScheduleEnabled(false)}
+                      className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 border-2 ${
+                        !scheduleEnabled
+                          ? "border-opacity-100"
+                          : "border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400"
+                      }`}
+                      style={{
+                        borderColor: !scheduleEnabled
+                          ? brand.colors.primary
+                          : undefined,
+                        color: !scheduleEnabled
+                          ? brand.colors.primary
+                          : undefined,
+                        backgroundColor: !scheduleEnabled
+                          ? `${brand.colors.primary}10`
+                          : "transparent",
+                      }}
+                    >
+                      <Send className="w-4 h-4" />
+                      <span>Send Immediately</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setScheduleEnabled(true)}
+                      className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 border-2 ${
+                        scheduleEnabled
+                          ? "border-opacity-100"
+                          : "border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400"
+                      }`}
+                      style={{
+                        borderColor: scheduleEnabled
+                          ? brand.colors.primary
+                          : undefined,
+                        color: scheduleEnabled
+                          ? brand.colors.primary
+                          : undefined,
+                        backgroundColor: scheduleEnabled
+                          ? `${brand.colors.primary}10`
+                          : "transparent",
+                      }}
+                    >
+                      <Clock className="w-4 h-4" />
+                      <span>Schedule for Later</span>
+                    </button>
+                  </div>
+
+                  {scheduleEnabled && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      className="grid grid-cols-1 md:grid-cols-2 gap-4"
+                    >
+                      <div className="space-y-2">
+                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+                          Send Date &amp; Time *
+                        </label>
+                        <div className="relative">
+                          <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                          <input
+                            type="datetime-local"
+                            value={scheduledAt}
+                            onChange={(e) => setScheduledAt(e.target.value)}
+                            className="w-full pl-10 pr-4 py-3 bg-white/80 dark:bg-slate-700/80 border border-slate-200/50 dark:border-slate-600/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-opacity-50 transition-all duration-200"
+                            style={
+                              {
+                                "--tw-ring-color": `${brand.colors.primary}50`,
+                              } as React.CSSProperties
+                            }
+                          />
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+                          Repeat
+                        </label>
+                        <select
+                          value={frequency}
+                          onChange={(e) =>
+                            setFrequency(e.target.value as CampaignFrequency)
+                          }
+                          className="w-full px-4 py-3 bg-white/80 dark:bg-slate-700/80 border border-slate-200/50 dark:border-slate-600/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-opacity-50 transition-all duration-200 appearance-none"
+                          style={
+                            {
+                              "--tw-ring-color": `${brand.colors.primary}50`,
+                            } as React.CSSProperties
+                          }
+                        >
+                          {FREQUENCY_OPTIONS.map((option) => (
+                            <option key={option.value} value={option.value}>
+                              {option.label}
+                            </option>
+                          ))}
+                        </select>
+                        {frequency !== "once" && (
+                          <p className="text-xs text-slate-500 dark:text-slate-400">
+                            Repeats {frequency} starting from the selected time.
+                          </p>
+                        )}
+                      </div>
+                    </motion.div>
                   )}
                 </div>
               </motion.div>
@@ -813,6 +1012,98 @@ export const CreateCampaigns = () => {
           </AnimatePresence>
         </div>
       </div>
+
+      {/* Template Picker Modal */}
+      <AnimatePresence>
+        {templatePickerOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
+              onClick={() => setTemplatePickerOpen(false)}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
+            >
+              <div className="w-full max-w-2xl max-h-[85vh] overflow-y-auto bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/50 dark:border-slate-700/50 shadow-2xl pointer-events-auto">
+                <div className="flex items-center justify-between p-6 border-b border-slate-200/50 dark:border-slate-700/50 sticky top-0 bg-white dark:bg-slate-800 z-10">
+                  <div>
+                    <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100">
+                      Choose a Template
+                    </h2>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">
+                      Select a template to load into this campaign
+                    </p>
+                  </div>
+                  <motion.button
+                    onClick={() => setTemplatePickerOpen(false)}
+                    className="p-2 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <X className="w-5 h-5" />
+                  </motion.button>
+                </div>
+
+                <div className="p-6">
+                  {availableTemplates.length === 0 ? (
+                    <div className="text-center py-8">
+                      <LayoutTemplate className="w-10 h-10 text-slate-400 mx-auto mb-3" />
+                      <p className="text-slate-600 dark:text-slate-400">
+                        No templates yet. Create one in the Templates page.
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {availableTemplates.map((template) => (
+                        <motion.button
+                          key={template.uuid}
+                          onClick={() => loadTemplate(template)}
+                          className="w-full flex items-center justify-between p-4 rounded-xl border border-slate-200/50 dark:border-slate-700/50 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-all duration-200 text-left"
+                          whileHover={{ scale: 1.01 }}
+                          whileTap={{ scale: 0.99 }}
+                        >
+                          <div className="flex items-center space-x-3">
+                            <div
+                              className="p-2 rounded-lg"
+                              style={{
+                                backgroundColor: `${brand.colors.primary}10`,
+                                color: brand.colors.primary,
+                              }}
+                            >
+                              <LayoutTemplate className="w-5 h-5" />
+                            </div>
+                            <div>
+                              <div className="font-medium text-slate-800 dark:text-slate-200">
+                                {template.name}
+                              </div>
+                              <div className="text-sm text-slate-600 dark:text-slate-400">
+                                {template.subject}
+                              </div>
+                            </div>
+                          </div>
+                          <span
+                            className="text-sm font-medium flex-shrink-0"
+                            style={{ color: brand.colors.primary }}
+                          >
+                            Load
+                          </span>
+                        </motion.button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
