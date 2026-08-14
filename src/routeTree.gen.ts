@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as JoinNewslettersRouteImport } from './routes/join-newsletters'
 import { Route as DashboardRouteImport } from './routes/_dashboard'
 import { Route as AuthRouteImport } from './routes/_auth'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardTemplatesRouteImport } from './routes/_dashboard/templates'
 import { Route as DashboardSettingsRouteImport } from './routes/_dashboard/settings'
 import { Route as DashboardNewslettersRouteImport } from './routes/_dashboard/newsletters'
@@ -36,6 +37,11 @@ const DashboardRoute = DashboardRouteImport.update({
 } as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/_auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardTemplatesRoute = DashboardTemplatesRouteImport.update({
@@ -101,6 +107,7 @@ const Auth2faRoute = Auth2faRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
+  '/': typeof IndexRoute
   '/join-newsletters': typeof JoinNewslettersRoute
   '/2fa': typeof Auth2faRoute
   '/forgetpassword': typeof AuthForgetpasswordRoute
@@ -116,6 +123,7 @@ export interface FileRoutesByFullPath {
   '/templates': typeof DashboardTemplatesRoute
 }
 export interface FileRoutesByTo {
+  '/': typeof IndexRoute
   '/join-newsletters': typeof JoinNewslettersRoute
   '/2fa': typeof Auth2faRoute
   '/forgetpassword': typeof AuthForgetpasswordRoute
@@ -132,6 +140,7 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
   '/_auth': typeof AuthRouteWithChildren
   '/_dashboard': typeof DashboardRouteWithChildren
   '/join-newsletters': typeof JoinNewslettersRoute
@@ -151,6 +160,7 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/'
     | '/join-newsletters'
     | '/2fa'
     | '/forgetpassword'
@@ -166,6 +176,7 @@ export interface FileRouteTypes {
     | '/templates'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/'
     | '/join-newsletters'
     | '/2fa'
     | '/forgetpassword'
@@ -181,6 +192,7 @@ export interface FileRouteTypes {
     | '/templates'
   id:
     | '__root__'
+    | '/'
     | '/_auth'
     | '/_dashboard'
     | '/join-newsletters'
@@ -199,6 +211,7 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRouteWithChildren
   DashboardRoute: typeof DashboardRouteWithChildren
   JoinNewslettersRoute: typeof JoinNewslettersRoute
@@ -225,6 +238,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: ''
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_dashboard/templates': {
@@ -357,6 +377,7 @@ const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
 )
 
 const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
   AuthRoute: AuthRouteWithChildren,
   DashboardRoute: DashboardRouteWithChildren,
   JoinNewslettersRoute: JoinNewslettersRoute,

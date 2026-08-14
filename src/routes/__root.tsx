@@ -1,15 +1,10 @@
 import React, { useEffect } from "react";
-import { Outlet, createRootRoute, redirect } from "@tanstack/react-router";
+import { Outlet, createRootRoute } from "@tanstack/react-router";
 import { useLocation } from "@tanstack/react-router";
 import { initTheme } from "@/utils/theme";
 
 export const Route = createRootRoute({
   component: RootComponent,
-  beforeLoad: ({ location }) => {
-    if (location.pathname === "/") {
-      throw redirect({ to: "/join-newsletters" });
-    }
-  },
 });
 
 function RootComponent() {

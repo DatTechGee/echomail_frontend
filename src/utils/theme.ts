@@ -15,6 +15,12 @@ export function getStoredTheme(): Theme {
 export function applyTheme(theme: Theme): void {
   const root = document.documentElement;
   const isDark = theme === "dark" || (theme === "system" && getSystemDark());
+
+  if (root.classList.contains("dark") !== isDark) {
+    root.classList.add("theme-transition");
+    window.setTimeout(() => root.classList.remove("theme-transition"), 350);
+  }
+
   root.classList.toggle("dark", isDark);
   root.style.colorScheme = isDark ? "dark" : "light";
 }
