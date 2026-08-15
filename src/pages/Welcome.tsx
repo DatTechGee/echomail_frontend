@@ -19,21 +19,39 @@ import { Logo } from "@/components/Logo";
 const features = [
   {
     icon: Mail,
-    title: "Beautiful Templates",
+    title: "Campaign Builder",
     description:
-      "Pre-designed email templates that look great on any device and drive higher engagement",
+      "Create beautiful emails with our rich-text editor, preview them in Gmail, Outlook, and Apple Mail before sending",
   },
   {
     icon: Zap,
     title: "Automated Workflows",
     description:
-      "Set up drip campaigns, onboarding sequences, and nurture paths that run on autopilot",
+      "Build drip campaigns, welcome sequences, and nurture paths with step-based automations that run on autopilot",
   },
   {
     icon: TrendingUp,
     title: "Real-time Analytics",
     description:
-      "Track opens, clicks, and subscriber growth with detailed reports to optimize your strategy",
+      "Track opens, clicks, and subscriber growth with engagement funnels, monthly charts, and per-campaign performance",
+  },
+  {
+    icon: Sparkles,
+    title: "A/B Testing",
+    description:
+      "Test different subject lines or content variants on a subset of your audience and pick the winner automatically",
+  },
+  {
+    icon: Users,
+    title: "Subscriber Management",
+    description:
+      "Import contacts via CSV, organize with groups, manage newsletter subscribers with double opt-in and preferences",
+  },
+  {
+    icon: Send,
+    title: "Smart Scheduling",
+    description:
+      "Send immediately or schedule campaigns for the perfect time with recurring daily, weekly, or monthly delivery",
   },
 ];
 
