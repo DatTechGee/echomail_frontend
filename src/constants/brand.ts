@@ -1,6 +1,6 @@
 export const brand = {
   projectName: "EchoMail",
-  logo: "/assets/logo.png",
+  logo: "/assets/logo-echomail.png",
   colors: {
     primary: "#2563EB",
     secondary: "#1E40AF",
