@@ -16,6 +16,7 @@ import {
   Calendar,
   Clock,
   LayoutTemplate,
+  FlaskConical,
 } from "lucide-react";
 import { BlockNoteEditor } from "@blocknote/core";
 import { brand } from "@/constants/brand";
@@ -44,6 +45,7 @@ import type {
   CampaignFrequency,
 } from "@/types/campaign";
 import { EmailPreview } from "@/components/EmailPreview";
+import { AbTestModal } from "@/components/AbTestModal";
 
 // Lazy load the Editor component
 const Editor = lazy(() => import("@/components/Editor"));
@@ -79,6 +81,7 @@ export const CreateCampaigns = () => {
 
   // Scheduling state
   const [scheduleEnabled, setScheduleEnabled] = useState(false);
+  const [abTestOpen, setAbTestOpen] = useState(false);
   const [scheduledAt, setScheduledAt] = useState("");
   const [frequency, setFrequency] = useState<CampaignFrequency>("once");
   const [templatePickerOpen, setTemplatePickerOpen] = useState(false);
@@ -731,6 +734,14 @@ export const CreateCampaigns = () => {
                         <span>{isLoading ? "Scheduling..." : "Schedule Campaign"}</span>
                       </motion.button>
                     )}
+                    <button
+                      onClick={() => setAbTestOpen(true)}
+                      disabled={!campaignName || !subject || recipientCount === 0}
+                      className="flex items-center space-x-1.5 px-4 py-2.5 rounded-xl text-sm font-medium border-2 border-purple-200 dark:border-purple-800 text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-all disabled:opacity-50"
+                    >
+                      <FlaskConical className="w-4 h-4" />
+                      <span>A/B Test</span>
+                    </button>
                   </div>
 
                   {scheduleEnabled && (
@@ -1160,6 +1171,15 @@ export const CreateCampaigns = () => {
           </>
         )}
       </AnimatePresence>
+
+      {/* A/B Test Modal */}
+      <AbTestModal
+        isOpen={abTestOpen}
+        onClose={() => setAbTestOpen(false)}
+        campaignUuid={duplicateUuid || ""}
+        campaignSubject={subject}
+        campaignContent={content}
+      />
     </div>
   );
 };
