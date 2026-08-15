@@ -9,6 +9,7 @@ import {
   LogOut,
   X,
   LayoutTemplate,
+  BarChart3,
 } from "lucide-react";
 import { Link, useLocation } from "@tanstack/react-router";
 import { brand } from "@/constants/brand";
@@ -29,6 +30,12 @@ const navigationItems: NavItem[] = [
     label: "Dashboard",
     icon: LayoutDashboard,
     href: "/dashboard",
+  },
+  {
+    id: "analytics",
+    label: "Analytics",
+    icon: BarChart3,
+    href: "/analytics",
   },
   {
     id: "campaigns",
