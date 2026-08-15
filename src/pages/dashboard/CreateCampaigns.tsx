@@ -427,6 +427,8 @@ export const CreateCampaigns = () => {
           >
             {isLoading ? (
               <Loader2 className="w-4 h-4 animate-spin" />
+            ) : scheduleEnabled ? (
+              <Calendar className="w-4 h-4" />
             ) : (
               <Send className="w-4 h-4" />
             )}
@@ -675,6 +677,53 @@ export const CreateCampaigns = () => {
                       <Clock className="w-4 h-4" />
                       <span>Schedule for Later</span>
                     </button>
+                  </div>
+
+                  {/* Action buttons for scheduling section */}
+                  <div className="flex items-center space-x-3 pt-2">
+                    {!scheduleEnabled ? (
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => handleSend(true)}
+                        disabled={
+                          isLoading || !campaignName || !subject || recipientCount === 0
+                        }
+                        className="flex items-center space-x-2 px-6 py-3 rounded-xl font-bold text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                        style={{
+                          background: `linear-gradient(135deg, ${brand.colors.primary}, ${brand.colors.primary}dd)`,
+                          boxShadow: `0 4px 12px ${brand.colors.primary}25`,
+                        }}
+                      >
+                        {isLoading ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <Send className="w-4 h-4" />
+                        )}
+                        <span>{isLoading ? "Sending..." : "Send Now"}</span>
+                      </motion.button>
+                    ) : (
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => handleSend(true)}
+                        disabled={
+                          isLoading || !campaignName || !subject || recipientCount === 0 || !scheduledAt
+                        }
+                        className="flex items-center space-x-2 px-6 py-3 rounded-xl font-bold text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                        style={{
+                          background: `linear-gradient(135deg, ${brand.colors.primary}, ${brand.colors.primary}dd)`,
+                          boxShadow: `0 4px 12px ${brand.colors.primary}25`,
+                        }}
+                      >
+                        {isLoading ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <Calendar className="w-4 h-4" />
+                        )}
+                        <span>{isLoading ? "Scheduling..." : "Schedule Campaign"}</span>
+                      </motion.button>
+                    )}
                   </div>
 
                   {scheduleEnabled && (
