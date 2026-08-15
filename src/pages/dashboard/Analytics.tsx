@@ -39,10 +39,10 @@ function formatNumber(n: number): string {
 
 export const Analytics = () => {
   const { data, isLoading } = useCampaignStats();
-  const stats = (data as any)?.data?.stats || (data as any)?.stats;
-  const monthlyActivity = (data as any)?.data?.monthly_activity || (data as any)?.monthly_activity || [];
-  const engagement = (data as any)?.data?.engagement || (data as any)?.engagement;
-  const recentCampaigns = (data as any)?.data?.recent_campaigns || (data as any)?.recent_campaigns || [];
+  const stats = (data as any)?.data?.data?.stats || {};
+  const monthlyActivity = (data as any)?.data?.data?.monthly_activity || [];
+  const engagement = (data as any)?.data?.data?.engagement;
+  const recentCampaigns = (data as any)?.data?.data?.recent_campaigns || [];
 
   if (isLoading) {
     return (

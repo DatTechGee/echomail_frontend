@@ -64,8 +64,8 @@ export const Automations = () => {
   const pauseMutation = usePauseAutomation();
   const deleteMutation = useDeleteAutomation();
 
-  const automations = (automationsData as any)?.data?.automations?.data || [];
-  const stats = (statsData as any)?.data?.stats || {};
+  const automations = (automationsData as any)?.data?.data?.automations?.data || [];
+  const stats = (statsData as any)?.data?.data?.stats || {};
 
   const handleCreate = async () => {
     if (!newName.trim()) {
