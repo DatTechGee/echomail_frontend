@@ -69,14 +69,14 @@ export const Analytics = () => {
     },
     {
       label: "Avg Open Rate",
-      value: `${(stats?.average_open_rate || 0).toFixed(1)}%`,
+      value: `${Number(stats?.average_open_rate || 0).toFixed(1)}%`,
       icon: Eye,
       color: "#F59E0B",
       detail: `${formatNumber(stats?.total_opens || 0)} total opens`,
     },
     {
       label: "Avg Click Rate",
-      value: `${(stats?.average_click_rate || 0).toFixed(1)}%`,
+      value: `${Number(stats?.average_click_rate || 0).toFixed(1)}%`,
       icon: MousePointerClick,
       color: "#8B5CF6",
       detail: `${formatNumber(stats?.total_clicks || 0)} total clicks`,
@@ -273,7 +273,7 @@ export const Analytics = () => {
               {formatNumber(engagement?.opened || 0)}
             </div>
             <div className="text-sm text-slate-500 dark:text-slate-400">
-              Opened ({(engagement?.open_rate || 0).toFixed(1)}%)
+              Opened ({Number(engagement?.open_rate || 0).toFixed(1)}%)
             </div>
           </div>
 
@@ -290,7 +290,7 @@ export const Analytics = () => {
               {formatNumber(engagement?.clicked || 0)}
             </div>
             <div className="text-sm text-slate-500 dark:text-slate-400">
-              Clicked ({(engagement?.click_rate || 0).toFixed(1)}%)
+              Clicked ({Number(engagement?.click_rate || 0).toFixed(1)}%)
             </div>
           </div>
         </div>
@@ -388,12 +388,12 @@ export const Analytics = () => {
                     </td>
                     <td className="py-3 text-right">
                       <span className="font-medium text-green-600 dark:text-green-400">
-                        {(c.open_rate || 0).toFixed(1)}%
+                        {Number(c.open_rate || 0).toFixed(1)}%
                       </span>
                     </td>
                     <td className="py-3 text-right">
                       <span className="font-medium text-amber-600 dark:text-amber-400">
-                        {(c.click_rate || 0).toFixed(1)}%
+                        {Number(c.click_rate || 0).toFixed(1)}%
                       </span>
                     </td>
                   </tr>

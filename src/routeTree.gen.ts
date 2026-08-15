@@ -13,6 +13,7 @@ import { Route as JoinNewslettersRouteImport } from './routes/join-newsletters'
 import { Route as DashboardRouteImport } from './routes/_dashboard'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as UnsubscribeTokenRouteImport } from './routes/unsubscribe.$token'
 import { Route as DashboardTemplatesRouteImport } from './routes/_dashboard/templates'
 import { Route as DashboardSettingsRouteImport } from './routes/_dashboard/settings'
 import { Route as DashboardNewslettersRouteImport } from './routes/_dashboard/newsletters'
@@ -20,6 +21,8 @@ import { Route as DashboardDashboardRouteImport } from './routes/_dashboard/dash
 import { Route as DashboardCreateCampaignsRouteImport } from './routes/_dashboard/create-campaigns'
 import { Route as DashboardContactsRouteImport } from './routes/_dashboard/contacts'
 import { Route as DashboardCampaignsRouteImport } from './routes/_dashboard/campaigns'
+import { Route as DashboardAutomationsRouteImport } from './routes/_dashboard/automations'
+import { Route as DashboardAnalyticsRouteImport } from './routes/_dashboard/analytics'
 import { Route as AuthResetpasswordRouteImport } from './routes/_auth/resetpassword'
 import { Route as AuthOtpRouteImport } from './routes/_auth/otp'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
@@ -42,6 +45,11 @@ const AuthRoute = AuthRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UnsubscribeTokenRoute = UnsubscribeTokenRouteImport.update({
+  id: '/unsubscribe/$token',
+  path: '/unsubscribe/$token',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardTemplatesRoute = DashboardTemplatesRouteImport.update({
@@ -80,6 +88,16 @@ const DashboardCampaignsRoute = DashboardCampaignsRouteImport.update({
   path: '/campaigns',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardAutomationsRoute = DashboardAutomationsRouteImport.update({
+  id: '/automations',
+  path: '/automations',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardAnalyticsRoute = DashboardAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const AuthResetpasswordRoute = AuthResetpasswordRouteImport.update({
   id: '/resetpassword',
   path: '/resetpassword',
@@ -114,6 +132,8 @@ export interface FileRoutesByFullPath {
   '/login': typeof AuthLoginRoute
   '/otp': typeof AuthOtpRoute
   '/resetpassword': typeof AuthResetpasswordRoute
+  '/analytics': typeof DashboardAnalyticsRoute
+  '/automations': typeof DashboardAutomationsRoute
   '/campaigns': typeof DashboardCampaignsRoute
   '/contacts': typeof DashboardContactsRoute
   '/create-campaigns': typeof DashboardCreateCampaignsRoute
@@ -121,6 +141,7 @@ export interface FileRoutesByFullPath {
   '/newsletters': typeof DashboardNewslettersRoute
   '/settings': typeof DashboardSettingsRoute
   '/templates': typeof DashboardTemplatesRoute
+  '/unsubscribe/$token': typeof UnsubscribeTokenRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -130,6 +151,8 @@ export interface FileRoutesByTo {
   '/login': typeof AuthLoginRoute
   '/otp': typeof AuthOtpRoute
   '/resetpassword': typeof AuthResetpasswordRoute
+  '/analytics': typeof DashboardAnalyticsRoute
+  '/automations': typeof DashboardAutomationsRoute
   '/campaigns': typeof DashboardCampaignsRoute
   '/contacts': typeof DashboardContactsRoute
   '/create-campaigns': typeof DashboardCreateCampaignsRoute
@@ -137,6 +160,7 @@ export interface FileRoutesByTo {
   '/newsletters': typeof DashboardNewslettersRoute
   '/settings': typeof DashboardSettingsRoute
   '/templates': typeof DashboardTemplatesRoute
+  '/unsubscribe/$token': typeof UnsubscribeTokenRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -149,6 +173,8 @@ export interface FileRoutesById {
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/otp': typeof AuthOtpRoute
   '/_auth/resetpassword': typeof AuthResetpasswordRoute
+  '/_dashboard/analytics': typeof DashboardAnalyticsRoute
+  '/_dashboard/automations': typeof DashboardAutomationsRoute
   '/_dashboard/campaigns': typeof DashboardCampaignsRoute
   '/_dashboard/contacts': typeof DashboardContactsRoute
   '/_dashboard/create-campaigns': typeof DashboardCreateCampaignsRoute
@@ -156,6 +182,7 @@ export interface FileRoutesById {
   '/_dashboard/newsletters': typeof DashboardNewslettersRoute
   '/_dashboard/settings': typeof DashboardSettingsRoute
   '/_dashboard/templates': typeof DashboardTemplatesRoute
+  '/unsubscribe/$token': typeof UnsubscribeTokenRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -167,6 +194,8 @@ export interface FileRouteTypes {
     | '/login'
     | '/otp'
     | '/resetpassword'
+    | '/analytics'
+    | '/automations'
     | '/campaigns'
     | '/contacts'
     | '/create-campaigns'
@@ -174,6 +203,7 @@ export interface FileRouteTypes {
     | '/newsletters'
     | '/settings'
     | '/templates'
+    | '/unsubscribe/$token'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -183,6 +213,8 @@ export interface FileRouteTypes {
     | '/login'
     | '/otp'
     | '/resetpassword'
+    | '/analytics'
+    | '/automations'
     | '/campaigns'
     | '/contacts'
     | '/create-campaigns'
@@ -190,6 +222,7 @@ export interface FileRouteTypes {
     | '/newsletters'
     | '/settings'
     | '/templates'
+    | '/unsubscribe/$token'
   id:
     | '__root__'
     | '/'
@@ -201,6 +234,8 @@ export interface FileRouteTypes {
     | '/_auth/login'
     | '/_auth/otp'
     | '/_auth/resetpassword'
+    | '/_dashboard/analytics'
+    | '/_dashboard/automations'
     | '/_dashboard/campaigns'
     | '/_dashboard/contacts'
     | '/_dashboard/create-campaigns'
@@ -208,6 +243,7 @@ export interface FileRouteTypes {
     | '/_dashboard/newsletters'
     | '/_dashboard/settings'
     | '/_dashboard/templates'
+    | '/unsubscribe/$token'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -215,6 +251,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRouteWithChildren
   DashboardRoute: typeof DashboardRouteWithChildren
   JoinNewslettersRoute: typeof JoinNewslettersRoute
+  UnsubscribeTokenRoute: typeof UnsubscribeTokenRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -245,6 +282,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/unsubscribe/$token': {
+      id: '/unsubscribe/$token'
+      path: '/unsubscribe/$token'
+      fullPath: '/unsubscribe/$token'
+      preLoaderRoute: typeof UnsubscribeTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_dashboard/templates': {
@@ -294,6 +338,20 @@ declare module '@tanstack/react-router' {
       path: '/campaigns'
       fullPath: '/campaigns'
       preLoaderRoute: typeof DashboardCampaignsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/_dashboard/automations': {
+      id: '/_dashboard/automations'
+      path: '/automations'
+      fullPath: '/automations'
+      preLoaderRoute: typeof DashboardAutomationsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/_dashboard/analytics': {
+      id: '/_dashboard/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof DashboardAnalyticsRouteImport
       parentRoute: typeof DashboardRoute
     }
     '/_auth/resetpassword': {
@@ -353,6 +411,8 @@ const AuthRouteChildren: AuthRouteChildren = {
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 interface DashboardRouteChildren {
+  DashboardAnalyticsRoute: typeof DashboardAnalyticsRoute
+  DashboardAutomationsRoute: typeof DashboardAutomationsRoute
   DashboardCampaignsRoute: typeof DashboardCampaignsRoute
   DashboardContactsRoute: typeof DashboardContactsRoute
   DashboardCreateCampaignsRoute: typeof DashboardCreateCampaignsRoute
@@ -363,6 +423,8 @@ interface DashboardRouteChildren {
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardAnalyticsRoute: DashboardAnalyticsRoute,
+  DashboardAutomationsRoute: DashboardAutomationsRoute,
   DashboardCampaignsRoute: DashboardCampaignsRoute,
   DashboardContactsRoute: DashboardContactsRoute,
   DashboardCreateCampaignsRoute: DashboardCreateCampaignsRoute,
@@ -381,6 +443,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   DashboardRoute: DashboardRouteWithChildren,
   JoinNewslettersRoute: JoinNewslettersRoute,
+  UnsubscribeTokenRoute: UnsubscribeTokenRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
