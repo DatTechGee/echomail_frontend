@@ -43,6 +43,7 @@ import type {
   RecipientConfig,
   CampaignFrequency,
 } from "@/types/campaign";
+import { EmailPreview } from "@/components/EmailPreview";
 
 // Lazy load the Editor component
 const Editor = lazy(() => import("@/components/Editor"));
@@ -622,6 +623,12 @@ export const CreateCampaigns = () => {
                     </p>
                   )}
                 </div>
+
+                {/* Email Preview */}
+                <EmailPreview
+                  subject={subject}
+                  content={content}
+                />
 
                 {/* Scheduling */}
                 <div className="space-y-4">
