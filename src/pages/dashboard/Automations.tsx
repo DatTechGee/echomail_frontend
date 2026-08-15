@@ -51,10 +51,18 @@ export const Automations = () => {
   const [newName, setNewName] = useState("");
   const [newDesc, setNewDesc] = useState("");
   const [newTrigger, setNewTrigger] = useState("subscriber_joins");
+  const DEFAULT_STEP_CONFIGS: Record<string, Record<string, any>> = {
+    wait: { duration: 1, unit: "days" },
+    send_email: { subject: "", campaign_id: null },
+    tag: { tag_name: "" },
+    end: {},
+    condition: { field: "", operator: "equals", value: "" },
+  };
+
   const [newSteps, setNewSteps] = useState<{ step_type: string; step_config: Record<string, any> }[]>([
-    { step_type: "wait", step_config: { duration: 1, unit: "days" } },
-    { step_type: "send_email", step_config: { subject: "", campaign_id: null } },
-    { step_type: "end", step_config: {} },
+    { step_type: "wait", step_config: { ...DEFAULT_STEP_CONFIGS.wait } },
+    { step_type: "send_email", step_config: { ...DEFAULT_STEP_CONFIGS.send_email } },
+    { step_type: "end", step_config: { ...DEFAULT_STEP_CONFIGS.end } },
   ]);
 
   const { data: automationsData, isLoading } = useAutomations();
@@ -340,8 +348,9 @@ export const Automations = () => {
                         <select
                           value={step.step_type}
                           onChange={(e) => {
-                            const updated = [...newSteps];
-                            updated[i].step_type = e.target.value;
+                            const updated = newSteps.map((s, j) =>
+                              j === i ? { step_type: e.target.value, step_config: { ...DEFAULT_STEP_CONFIGS[e.target.value] || {} } } : { ...s, step_config: { ...s.step_config } }
+                            );
                             setNewSteps(updated);
                           }}
                           className="flex-1 px-2 py-1 rounded border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm"
@@ -357,8 +366,9 @@ export const Automations = () => {
                               min={1}
                               value={step.step_config.duration || 1}
                               onChange={(e) => {
-                                const updated = [...newSteps];
-                                updated[i].step_config.duration = Number(e.target.value);
+                                const updated = newSteps.map((s, j) =>
+                                  j === i ? { ...s, step_config: { ...s.step_config, duration: Number(e.target.value) } } : { ...s, step_config: { ...s.step_config } }
+                                );
                                 setNewSteps(updated);
                               }}
                               className="w-16 px-2 py-1 rounded border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm"
@@ -366,8 +376,9 @@ export const Automations = () => {
                             <select
                               value={step.step_config.unit || "days"}
                               onChange={(e) => {
-                                const updated = [...newSteps];
-                                updated[i].step_config.unit = e.target.value;
+                                const updated = newSteps.map((s, j) =>
+                                  j === i ? { ...s, step_config: { ...s.step_config, unit: e.target.value } } : { ...s, step_config: { ...s.step_config } }
+                                );
                                 setNewSteps(updated);
                               }}
                               className="px-2 py-1 rounded border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm"
