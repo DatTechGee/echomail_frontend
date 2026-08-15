@@ -1,4 +1,5 @@
 export * from "./Analytics";
+export * from "./Automations";
 export * from "./Campaigns";
 export * from "./Contacts";
 export * from "./Dashboard";

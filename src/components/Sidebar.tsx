@@ -10,6 +10,7 @@ import {
   X,
   LayoutTemplate,
   BarChart3,
+  Zap,
 } from "lucide-react";
 import { Link, useLocation } from "@tanstack/react-router";
 import { brand } from "@/constants/brand";
@@ -54,6 +55,12 @@ const navigationItems: NavItem[] = [
     label: "Contacts",
     icon: Users,
     href: "/contacts",
+  },
+  {
+    id: "automations",
+    label: "Automations",
+    icon: Zap,
+    href: "/automations",
   },
   {
     id: "WaitLists",
